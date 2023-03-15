@@ -27,7 +27,9 @@ jobs:
       - uses: actions/checkout@v2
         with:
           python-version: 3.8
-      - run: cat package.json
+
+      - name: Display configuration
+        run: cat package.json
 
       # - name: Deploy
       #   run: ls -al ; cat build-info.yaml ; cd terraform ; terraform init -reconfigure -input=false -backend-config=bucket=podaac-services-${{ env.TARGET_ENV }}-terraform ; terraform output hitide-bucket-name

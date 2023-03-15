@@ -26,26 +26,66 @@ jobs:
       - name: Checkout project to build and deploy
         uses: actions/checkout@v2
 
-      - name: Display configuration
-        run: ls -al
-
+      ## Read the json file into the environment variables
       - name: JSON to variables
         uses: rgarcia-phi/json-to-variables@v1.1.0
         with:
           filename: 'package.json'
           prefix: project
-      - name: Show output
-        run: echo "The time was ${{ env.project }}"
-
 
       ## Build the YAML file
-      - name: Configure YAML file
+      - name: Configure Initial YAML file
         run: |
           echo "---" >build-info.yaml;
           echo "  service_name: \"env.project_service_name\""           >>build-info.yaml; 
           echo "  source_service_version: \"env.project_version\"" >>build-info.yaml; 
           echo "  build_environment: \"$(env)\""          >>build-info.yaml; 
           cat build-info.yaml
+
+
+      ## Update build-info yaml file for pre-alpha
+      - name: Pre Alpha
+        if: ${{ startsWith(github.ref, 'refs/heads/feature/') }} ||
+            ${{ contains(github.base_ref, 'develop') }}
+        run: echo "TARGET_ENV=sit" >> $GITHUB_ENV|
+             echo "TARGET_ENV_UPPERCASE=SIT" >> $GITHUB_ENV
+
+      ## Update build-info yaml file for alpha
+      - name: Alpha
+        if: ${{ startsWith(github.ref, 'refs/heads/develop/') }}
+        run: echo "TARGET_ENV=sit" >> $GITHUB_ENV|
+            echo "TARGET_ENV_UPPERCASE=SIT" >> $GITHUB_ENV
+
+      ## Update build-info yaml file for release candidates
+      - name: Release Candidate
+        if: ${{ contains(github.base_ref, 'master') }}
+        run: echo "TARGET_ENV=uat" >> $GITHUB_ENV|
+            echo "TARGET_ENV_UPPERCASE=UAT" >> $GITHUB_ENV
+
+      ## Update build-info yaml file for release
+      - name: Release
+        if: ${{ startsWith(github.ref, 'refs/heads/master/') }}
+        run: echo "TARGET_ENV=ops" >> $GITHUB_ENV |
+            echo "TARGET_ENV_UPPERCASE=OPS" >> $GITHUB_ENV
+
+
+
+      ## Update build-info yaml file for release
+      - name: Update YAML file with release-specific configs
+        uses: fjogeleit/yaml-update-action@main
+        with:
+          valueFile: 'build-info.yaml'
+          commitChange: false
+          change: |
+          {
+            "build_service_version": "${{ env.THE_VERSION }}", 
+            "artifactory_base_path": "${{ env.ART_BASE_PATH }}", 
+            "artifactory_docker_registry": "${{ env.ART_REGISTRY }}", 
+            "deploy_env": "${{ env.THE_ENV }}"
+          }
+
+      - name: Show updated YAML file
+        run: cat build-info.yaml
 
       # - name: Deploy
       #   run: ls -al ; cat build-info.yaml ; cd terraform ; terraform init -reconfigure -input=false -backend-config=bucket=podaac-services-${{ env.TARGET_ENV }}-terraform ; terraform output hitide-bucket-name
@@ -66,6 +106,7 @@ jobs:
 
       # Run Build
         # Version
+          # Pre Alpha
           # Alpha
           # Minor
           # Release Candidate

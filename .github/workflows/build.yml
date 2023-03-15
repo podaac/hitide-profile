@@ -41,7 +41,7 @@ jobs:
 
       ## Diplay JSON config
       - name: Display JSON configs
-        env: ${{ fromJSON( env.PACKAGE_JSON ) }}
+        env: ${{ fromJSON( $env.PACKAGE_JSON ) }}
         run: env
 
       ## Build the YAML file

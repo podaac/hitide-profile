@@ -37,13 +37,11 @@ jobs:
           content="${content//$'\n'/'%0A'}"
           content="${content//$'\r'/'%0D'}"
           # end of optional handling for multi line json
-          echo "the_service=${{fromJson(content).service_name}}
-          echo "the_version=${{fromJson(content).source_service_version}}
-          echo "the_env=${{fromJson(${content}).build_environment}}
+          echo "PACKAGE_JSON=$content" >>$GITHUB_ENV
 
       ## Diplay JSON config
       - name: Display JSON configs
-        run: echo "the_service"
+        run: "echo 'hello'"
 
       ## Build the YAML file
       - name: Configure YAML file

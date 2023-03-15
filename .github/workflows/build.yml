@@ -37,9 +37,9 @@ jobs:
           content="${content//$'\n'/'%0A'}"
           content="${content//$'\r'/'%0D'}"
           # end of optional handling for multi line json
-          echo "::set-output name=packageJson::$content"
+          echo "::set-env name=packageJson::$content"
       - run: |
-          echo "${{fromJson(steps.set_var.outputs.packageJson).version}}"      
+          echo "${{fromJson(env.packageJson).version}}"      
 
       ## Build the YAML file
       - name: Configure YAML file

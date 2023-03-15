@@ -29,16 +29,13 @@ jobs:
       - name: Display configuration
         run: ls -al
 
-      - name: Read JSON for detection of config values
-        run: |
-          content=`cat ./package.json`
-          # the following lines are only required for multi line json
-          content="${content//'%'/'%25'}"
-          content="${content//$'\n'/'%0A'}"
-          content="${content//$'\r'/'%0D'}"
-          # end of optional handling for multi line json
-          echo "the_service=${{fromJson(content).service_name}}" >>$GITHUB_ENV
-          echo "PACKAGE_JSON=$content" >>$GITHUB_ENV
+      - name: JSON to variables
+        uses: rgarcia-phi/json-to-variables@v1.1.0
+        with:
+          filename: 'package.json'
+          prefix: project
+      - name: Show output
+        run: echo "The time was ${{ env.project }}"
 
       ## Diplay JSON config
       - name: Display JSON configs

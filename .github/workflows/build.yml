@@ -76,7 +76,7 @@ jobs:
         with:
           valueFile: 'build-info.yaml'
           commitChange: false
-          change: |
+          changes: |
           {
             "build_service_version": "${{ env.THE_VERSION }}", 
             "artifactory_base_path": "${{ env.ART_BASE_PATH }}", 

@@ -37,17 +37,14 @@ jobs:
       - name: Show output
         run: echo "The time was ${{ env.project }}"
 
-      ## Diplay JSON config
-      - name: Display JSON configs
-        run: "echo 'hello'"
 
       ## Build the YAML file
       - name: Configure YAML file
         run: |
           echo "---" >build-info.yaml;
-          echo "  service_name: \"the_service\""           >>build-info.yaml; 
-          echo "  source_service_version: \"the_version\"" >>build-info.yaml; 
-          echo "  build_environment: \"the_env\""          >>build-info.yaml; 
+          echo "  service_name: \"env.project_service_name\""           >>build-info.yaml; 
+          echo "  source_service_version: \"env.project_version\"" >>build-info.yaml; 
+          echo "  build_environment: \"$(env)\""          >>build-info.yaml; 
           cat build-info.yaml
 
       # - name: Deploy

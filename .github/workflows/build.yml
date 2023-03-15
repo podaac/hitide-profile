@@ -29,6 +29,27 @@ jobs:
       - name: Display configuration
         run: ls -al
 
+      - name: Read JSON for detection of config values
+        run: |
+          content=`cat ./package.json`
+          # the following lines are only required for multi line json
+          content="${content//'%'/'%25'}"
+          content="${content//$'\n'/'%0A'}"
+          content="${content//$'\r'/'%0D'}"
+          # end of optional handling for multi line json
+          echo "::set-output name=packageJson::$content"
+      - run: |
+          echo "${{fromJson(steps.set_var.outputs.packageJson).version}}"      
+
+      ## Build the YAML file
+      - name: Configure YAML file
+        run: |
+          echo "---" >build-info.yaml;
+          echo "  service_name: \"the_service\""           >>build-info.yaml; 
+          echo "  source_service_version: \"the_version\"" >>build-info.yaml; 
+          echo "  build_environment: \"the_env\""          >>build-info.yaml; 
+          cat build-info.yaml
+
       # - name: Deploy
       #   run: ls -al ; cat build-info.yaml ; cd terraform ; terraform init -reconfigure -input=false -backend-config=bucket=podaac-services-${{ env.TARGET_ENV }}-terraform ; terraform output hitide-bucket-name
 

@@ -37,6 +37,7 @@ jobs:
           content="${content//$'\n'/'%0A'}"
           content="${content//$'\r'/'%0D'}"
           # end of optional handling for multi line json
+          echo "the_service=${{fromJson($content).service_name}}
           echo "PACKAGE_JSON=$content" >>$GITHUB_ENV
 
       ## Diplay JSON config

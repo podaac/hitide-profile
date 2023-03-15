@@ -37,9 +37,9 @@ jobs:
           content="${content//$'\n'/'%0A'}"
           content="${content//$'\r'/'%0D'}"
           # end of optional handling for multi line json
-          echo "::set-env name=packageJson::$content"
+          echo "PACKAGE_JSON=$content" >>$GITHUB_ENV
       - run: |
-          echo "${{fromJson(env.packageJson).version}}"      
+          echo "${{fromJson(env.PACKAGE_JSON).version}}"      
 
       ## Build the YAML file
       - name: Configure YAML file

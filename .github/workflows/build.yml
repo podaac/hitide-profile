@@ -37,8 +37,8 @@ jobs:
       - name: Configure Initial YAML file
         run: |
           echo "---" >build-info.yaml;
-          echo "  service_name: \"env.project_service_name\""           >>build-info.yaml; 
-          echo "  source_service_version: \"env.project_version\"" >>build-info.yaml; 
+          echo "  service_name: \"${{ env.project_service_name }}\""           >>build-info.yaml; 
+          echo "  source_service_version: \"${{ env.project_version }}\"" >>build-info.yaml; 
           echo "  build_environment: \"$(env)\""          >>build-info.yaml; 
           cat build-info.yaml
 
@@ -76,14 +76,14 @@ jobs:
         with:
           valueFile: 'build-info.yaml'
           propertyPath: 'build_service_version'
-          value: env.THE_VERSION
+          value: ${{ env.THE_VERSION }}
           commitChange: false
       - name: Update YAML file with release-specific configs
         uses: fjogeleit/yaml-update-action@main
         with:
           valueFile: 'build-info.yaml'
           propertyPath: 'artifactory_base_path'
-          value: env.ART_BASE_PATH
+          value: ${{ env.ART_BASE_PATH }}
           commitChange: false
       - name: Update YAML file with release-specific configs
         uses: fjogeleit/yaml-update-action@main
@@ -96,6 +96,21 @@ jobs:
 
       - name: Show updated YAML file
         run: cat build-info.yaml
+
+# Pre-Alpha
+# "npm --no-git-tag-version --allow-same-version version ${build_info.source_service_version}-${GIT_BRANCH.replaceAll('/', '-')}.${BUILD_NUMBER}"
+# Alpha
+# "npm --no-git-tag-version version prerelease"
+# Release Candidate RC
+# "npm --no-git-tag-version version prerelease --preid rc"
+# Release Candidate No RC
+# "npm --no-git-tag-version version ${env.CHANGE_BRANCH.split('/')[-1]}-rc.1"
+# Release
+# the_version = build_info['source_service_version'].split('-')[0]
+
+
+
+
 
       # - name: Deploy
       #   run: ls -al ; cat build-info.yaml ; cd terraform ; terraform init -reconfigure -input=false -backend-config=bucket=podaac-services-${{ env.TARGET_ENV }}-terraform ; terraform output hitide-bucket-name

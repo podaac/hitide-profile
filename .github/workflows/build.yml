@@ -76,21 +76,21 @@ jobs:
         with:
           valueFile: 'build-info.yaml'
           propertyPath: 'build_service_version'
-          value: "${{ env.THE_VERSION }}"
+          value: env.THE_VERSION
           commitChange: false
       - name: Update YAML file with release-specific configs
         uses: fjogeleit/yaml-update-action@main
         with:
           valueFile: 'build-info.yaml'
           propertyPath: 'artifactory_base_path'
-          value: "${{ env.ART_BASE_PATH }}"
+          value: env.ART_BASE_PATH
           commitChange: false
       - name: Update YAML file with release-specific configs
         uses: fjogeleit/yaml-update-action@main
         with:
           valueFile: 'build-info.yaml'
           propertyPath: 'deploy_env'
-          value: "${{ env.THE_ENV }}"
+          value: env.TARGET_ENV
           commitChange: false
 
 

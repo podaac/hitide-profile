@@ -43,8 +43,8 @@ jobs:
           cat build-info.yaml
           echo "THE_VERSION=${{ env.project_version }}" >> $GITHUB_ENV;
           echo "GIT_BRANCH=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV;
-          GITHUB_REPO_READABLE=${{ env.PROJECT_NAME }}
-          GITHUB_REPO_READABLE="${GITHUB_REPO_READABLE//\//-}"
+          GITHUB_REPO=${{ env.PROJECT_NAME }}
+          GITHUB_REPO_READABLE="${GITHUB_REPO//\//-}"
           echo "GITHIB_REPO_READABLE=${GITHUB_REPO_READABLE}" >> $GITHUB_ENV
 
       ## Update build-info yaml file for pre-alpha

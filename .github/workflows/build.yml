@@ -90,7 +90,7 @@ jobs:
         with:
           valueFile: 'build-info.yaml'
           propertyPath: 'deploy_env'
-          value: env.TARGET_ENV
+          value: ${{ env.TARGET_ENV }}
           commitChange: false
 
 

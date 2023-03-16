@@ -63,7 +63,7 @@ jobs:
         run: |
             echo "THE_ENV=sit" >> $GITHUB_ENV
             echo "TARGET_ENV_UPPERCASE=SIT" >> $GITHUB_ENV
-            echo "THE_VERSION=$(npm --no-git-tag-version version prerelease)" >> $GITHUB_ENV"
+            echo "THE_VERSION=$(npm --no-git-tag-version version prerelease)" >> $GITHUB_ENV
             
 
       ## Update build-info yaml file for release candidates
@@ -80,7 +80,7 @@ jobs:
         run: |
             echo "THE_ENV=uat" >> $GITHUB_ENV
             echo "TARGET_ENV_UPPERCASE=UAT" >> $GITHUB_ENV
-            echo "THE_VERSION=$(npm --no-git-tag-version version prerelease --preid rc)" >> $GITHUB_ENV"
+            echo "THE_VERSION=$(npm --no-git-tag-version version prerelease --preid rc)" >> $GITHUB_ENV
 
       ## Update build-info yaml file for release
       - name: Release
@@ -88,7 +88,7 @@ jobs:
         run: |
             echo "THE_ENV=ops" >> $GITHUB_ENV
             echo "TARGET_ENV_UPPERCASE=OPS" >> $GITHUB_ENV
-            echo "THE_VERSION=$(env.project_version##-*)" >> $GITHUB_ENV"
+            echo "THE_VERSION=$(env.project_version##-*)" >> $GITHUB_ENV
 
 
 

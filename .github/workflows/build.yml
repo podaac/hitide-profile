@@ -45,23 +45,37 @@ jobs:
           GITHUB_REF_READABLE="${GITHUB_REF//\//-}"
           echo "GITHUB_REF_READABLE=${GITHUB_REF_READABLE}" >> $GITHUB_ENV
 
-      ## Update build-info yaml file for pre-alpha
+
+
+
+      ## NPM Tagging
       - name: Pre Alpha
+        uses: actions/setup-node@v3
+        with:
+          node-version: 14
         if: ${{ startsWith(github.ref, 'refs/heads/feature/') }} ||
             ${{ contains(github.base_ref, 'develop') }}
-        run: |
+      - run: |
             echo "THE_ENV=sit" >> $GITHUB_ENV
             echo "TARGET_ENV_UPPERCASE=SIT" >> $GITHUB_ENV
+            npm --no-git-tag-version --allow-same-version version ${{ env.THE_VERSION }}-${{ env.GITHUB_REF_READABLE }}.${{ github.run_number }}
 
       ## Update build-info yaml file for alpha
       - name: Alpha
+        uses: actions/setup-node@v3
+        with:
+          node-version: 14
         if: ${{ startsWith(github.ref, 'refs/heads/develop/') }}
         run: |
             echo "THE_ENV=sit" >> $GITHUB_ENV
             echo "TARGET_ENV_UPPERCASE=SIT" >> $GITHUB_ENV
+            npm --no-git-tag-version version prerelease
 
       ## Update build-info yaml file for release candidates
       - name: Release Candidate
+        uses: actions/setup-node@v3
+        with:
+          node-version: 14
         if: ${{ contains(github.base_ref, 'master') }}
         run: |
             echo "THE_ENV=uat" >> $GITHUB_ENV
@@ -69,10 +83,30 @@ jobs:
 
       ## Update build-info yaml file for release
       - name: Release
+        uses: actions/setup-node@v3
+        with:
+          node-version: 14
+        if: ${{ startsWith(github.ref, 'refs/heads/master/') }} &&
+          contains(env.THE_VERSION, "rc")
+        run: |
+            echo "THE_ENV=uat" >> $GITHUB_ENV
+            echo "TARGET_ENV_UPPERCASE=UAT" >> $GITHUB_ENV
+            npm --no-git-tag-version version prerelease --preid rc
+
+      ## Update build-info yaml file for release
+      - name: Release
+        uses: actions/setup-node@v3
+        with:
+          node-version: 14
         if: ${{ startsWith(github.ref, 'refs/heads/master/') }}
         run: |
             echo "THE_ENV=ops" >> $GITHUB_ENV
             echo "TARGET_ENV_UPPERCASE=OPS" >> $GITHUB_ENV
+            npm --no-git-tag-version version prerelease --preid rc
+
+
+
+
 
 
 
@@ -104,35 +138,6 @@ jobs:
         run: cat build-info.yaml
 
 
-      ## NPM Tagging
-      - name: Pre Alpha
-        uses: actions/setup-node@v3
-        if: ${{ startsWith(github.ref, 'refs/heads/feature/') }} ||
-            ${{ contains(github.base_ref, 'develop') }}
-        with:
-          node-version: 14
-      - run: npm --no-git-tag-version --allow-same-version version ${{ env.THE_VERSION }}-${{ env.GITHUB_REF_READABLE }}.${{ github.run_number }}
-
-      ## Update build-info yaml file for alpha
-      - name: Alpha
-        if: ${{ startsWith(github.ref, 'refs/heads/develop/') }}
-        run: |
-            echo "THE_ENV=sit" >> $GITHUB_ENV
-            echo "TARGET_ENV_UPPERCASE=SIT" >> $GITHUB_ENV
-
-      ## Update build-info yaml file for release candidates
-      - name: Release Candidate
-        if: ${{ contains(github.base_ref, 'master') }}
-        run: |
-            echo "THE_ENV=uat" >> $GITHUB_ENV
-            echo "TARGET_ENV_UPPERCASE=UAT" >> $GITHUB_ENV
-
-      ## Update build-info yaml file for release
-      - name: Release
-        if: ${{ startsWith(github.ref, 'refs/heads/master/') }}
-        run: |
-            echo "THE_ENV=ops" >> $GITHUB_ENV
-            echo "TARGET_ENV_UPPERCASE=OPS" >> $GITHUB_ENV
 
 
       - name: NPM Tag

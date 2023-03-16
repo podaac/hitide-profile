@@ -75,14 +75,20 @@ jobs:
         uses: fjogeleit/yaml-update-action@main
         with:
           valueFile: 'build-info.yaml'
+          propertyPath: 'build_service_version'
+          value: "${{ env.THE_VERSION }}"
           commitChange: false
-          changes: |
-          {
-            "build_service_version": "${{ env.THE_VERSION }}", 
-            "artifactory_base_path": "${{ env.ART_BASE_PATH }}", 
-            "artifactory_docker_registry": "${{ env.ART_REGISTRY }}", 
-            "deploy_env": "${{ env.THE_ENV }}"
-          }
+        with:
+          valueFile: 'build-info.yaml'
+          propertyPath: 'artifactory_base_path'
+          value: "${{ env.ART_BASE_PATH }}"
+          commitChange: false
+        with:
+          valueFile: 'build-info.yaml'
+          propertyPath: 'deploy_env'
+          value: "${{ env.THE_ENV }}"
+          commitChange: false
+
 
       - name: Show updated YAML file
         run: cat build-info.yaml

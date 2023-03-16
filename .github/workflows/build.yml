@@ -42,7 +42,7 @@ jobs:
           echo "  build_environment: \"$(env)\""                          >>build-info.yaml; 
           cat build-info.yaml
           echo "THE_VERSION=${{ env.project_version }}" >> $GITHUB_ENV;
-
+          echo "GIT_BRANCH=GIT_BRANCH=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV;
 
       ## Update build-info yaml file for pre-alpha
       - name: Pre Alpha
@@ -99,7 +99,7 @@ jobs:
         run: cat build-info.yaml
 
 # Pre-Alpha
-# "npm --no-git-tag-version --allow-same-version version ${build_info.source_service_version}-${GIT_BRANCH.replaceAll('/', '-')}.${BUILD_NUMBER}"
+# "npm --no-git-tag-version --allow-same-version version ${build_info.source_service_version}-${GIT_BRANCH.replaceAll('/', '-')}.${{github.run_number}}"
 # Alpha
 # "npm --no-git-tag-version version prerelease"
 # Release Candidate RC

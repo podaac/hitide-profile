@@ -106,7 +106,7 @@ jobs:
 
       ## NPM Tagging
       - name: Pre Alpha
-        uses: actions/setup-node@v3
+      - uses: actions/setup-node@v3
         if: ${{ startsWith(github.ref, 'refs/heads/feature/') }} ||
             ${{ contains(github.base_ref, 'develop') }}
         with:

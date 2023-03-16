@@ -46,7 +46,7 @@ jobs:
           GITHUB_REPO=${{ env.IMAGE_NAME }}
           GITHUB_REPO_READABLE="${GITHUB_REPO//\//-}"
           echo "GITHIB_REPO_READABLE=${GITHUB_REPO_READABLE}" >> $GITHUB_ENV
-          echo "GH Repo Readable: ${GITHUB_REPO}"
+          echo "GH Repo Readable: ${GITHUB_REPO_READABLE}"
 
       ## Update build-info yaml file for pre-alpha
       - name: Pre Alpha

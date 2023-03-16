@@ -37,35 +37,36 @@ jobs:
       - name: Configure Initial YAML file
         run: |
           echo "---" >build-info.yaml;
-          echo "  service_name: \"${{ env.project_service_name }}\""           >>build-info.yaml; 
+          echo "  service_name: \"${{ env.project_service_name }}\""      >>build-info.yaml; 
           echo "  source_service_version: \"${{ env.project_version }}\"" >>build-info.yaml; 
-          echo "  build_environment: \"$(env)\""          >>build-info.yaml; 
+          echo "  build_environment: \"$(env)\""                          >>build-info.yaml; 
           cat build-info.yaml
+          echo "THE_VERSION=${{ env.project_version }}" >> $GITHUB_ENV;
 
 
       ## Update build-info yaml file for pre-alpha
       - name: Pre Alpha
         if: ${{ startsWith(github.ref, 'refs/heads/feature/') }} ||
             ${{ contains(github.base_ref, 'develop') }}
-        run: echo "TARGET_ENV=sit" >> $GITHUB_ENV|
+        run: echo "THE_ENV=sit" >> $GITHUB_ENV|
              echo "TARGET_ENV_UPPERCASE=SIT" >> $GITHUB_ENV
 
       ## Update build-info yaml file for alpha
       - name: Alpha
         if: ${{ startsWith(github.ref, 'refs/heads/develop/') }}
-        run: echo "TARGET_ENV=sit" >> $GITHUB_ENV|
+        run: echo "THE_ENV=sit" >> $GITHUB_ENV|
             echo "TARGET_ENV_UPPERCASE=SIT" >> $GITHUB_ENV
 
       ## Update build-info yaml file for release candidates
       - name: Release Candidate
         if: ${{ contains(github.base_ref, 'master') }}
-        run: echo "TARGET_ENV=uat" >> $GITHUB_ENV|
+        run: echo "THE_ENV=uat" >> $GITHUB_ENV|
             echo "TARGET_ENV_UPPERCASE=UAT" >> $GITHUB_ENV
 
       ## Update build-info yaml file for release
       - name: Release
         if: ${{ startsWith(github.ref, 'refs/heads/master/') }}
-        run: echo "TARGET_ENV=ops" >> $GITHUB_ENV |
+        run: echo "THE_ENV=ops" >> $GITHUB_ENV |
             echo "TARGET_ENV_UPPERCASE=OPS" >> $GITHUB_ENV
 
 
@@ -90,7 +91,7 @@ jobs:
         with:
           valueFile: 'build-info.yaml'
           propertyPath: 'deploy_env'
-          value: ${{ env.TARGET_ENV }}
+          value: ${{ env.THE_ENV }}
           commitChange: false
 
 

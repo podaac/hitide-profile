@@ -44,7 +44,7 @@ jobs:
           echo "THE_VERSION=${{ env.project_version }}" >> $GITHUB_ENV;
           echo "GIT_BRANCH=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV;
           GITHUB_REF_READABLE="${GITHUB_REF//\//-}"
-          echo "GITHIB_REF_READABLE=${GITHUB_REF_READABLE}" >> $GITHUB_ENV
+          echo "GITHUB_REF_READABLE=${GITHUB_REF_READABLE}" >> $GITHUB_ENV
           echo "GH Ref Readable: ${GITHUB_REF_READABLE}"
 
       ## Update build-info yaml file for pre-alpha
@@ -100,7 +100,7 @@ jobs:
 
       - name: Show updated YAML file
         run: cat build-info.yaml
-
+x
       - name: NPM Tag
         run: npm --no-git-tag-version --allow-same-version version ${{ env.THE_VERSION }}-${{ env.GITHUB_REF_READABLE }}.${{ github.run_number }}
 

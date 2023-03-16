@@ -100,7 +100,7 @@ jobs:
 
       - name: Show updated YAML file
         run: cat build-info.yaml
-x
+
       - name: NPM Tag
         run: npm --no-git-tag-version --allow-same-version version ${{ env.THE_VERSION }}-${{ env.GITHUB_REF_READABLE }}.${{ github.run_number }}
 

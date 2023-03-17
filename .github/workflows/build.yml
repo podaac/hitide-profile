@@ -148,6 +148,8 @@ jobs:
 
       - name: Tag Version
         run: |
+          git config --local user.name "podaac"
+          git config --local user.email podaac-tva@jpl.nasa.gov
           git commit -am '/version ${{ env.THE_VERSION }}'
 
 

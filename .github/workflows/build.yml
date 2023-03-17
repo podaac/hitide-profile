@@ -101,8 +101,8 @@ jobs:
 
       - name: DEBUG, Show Version
         run: |
-            echo "The Version: ${{ THE_VERSION }}"
-            echo "The ENV: ${{ THE_ENV }}"
+            echo "The Version: ${{ env.THE_VERSION }}"
+            echo "The ENV: ${{ env.THE_ENV }}"
 
 
 

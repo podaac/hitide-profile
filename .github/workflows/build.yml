@@ -92,7 +92,7 @@ jobs:
 
       ## Update build-info yaml file for release
       - name: Release
-        if: ${{ startsWith(github.ref, 'refs/heads/master/') }}
+        if: ${{ startsWith(github.ref, 'refs/heads/main') }}
         run: |
             echo "THE_ENV=ops" >> $GITHUB_ENV
             echo "TARGET_ENV_UPPERCASE=OPS" >> $GITHUB_ENV

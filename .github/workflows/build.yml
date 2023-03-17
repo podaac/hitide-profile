@@ -167,6 +167,12 @@ jobs:
           git push origin HEAD:${{ github.ref }}
           git push origin ${{ env.THE_VERSION }}
 
+
+      - name: Build Docker Image
+        run: |
+            sh ./docker/build-docker.sh -n ${{ env.project_service_name }} -v ${{ THE_VERSION }}
+
+
 # Pre-Alpha
 # "npm --no-git-tag-version --allow-same-version version ${{ env.THE_VERSION }}-${GIT_BRANCH.replaceAll('/', '-')}.${{github.run_number}}"
 # Alpha

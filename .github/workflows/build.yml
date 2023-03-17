@@ -162,6 +162,11 @@ jobs:
         run: |
           git tag -a ${{ env.THE_VERSION }}
 
+      - name: Push tags to origin
+        run: |
+          git push origin HEAD:${{ env.THE_BRANCH }}
+          git push origin ${{ env.THE_BRANCH }}
+
 # Pre-Alpha
 # "npm --no-git-tag-version --allow-same-version version ${{ env.THE_VERSION }}-${GIT_BRANCH.replaceAll('/', '-')}.${{github.run_number}}"
 # Alpha

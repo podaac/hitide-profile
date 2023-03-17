@@ -167,7 +167,12 @@ jobs:
       #     git push origin HEAD:${{ github.ref }}
       #     git push origin ${{ env.THE_VERSION }}
 
+  publish:
+    name: Publish to GHCR
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
 
+    steps:
       - name: Build Docker Image
         run: ./docker/build-docker.sh -n ${{ env.project_service_name }} -v ${{ env.THE_VERSION }}
 #        run: ./docker/build-docker.sh -n ${{ env.project_service_name }} -v ${{ THE_VERSION }}

@@ -151,7 +151,12 @@ jobs:
           git config --local user.name "podaac"
           git config --local user.email podaac-tva@jpl.nasa.gov
           git commit -am '/version ${{ env.THE_VERSION }}'
-
+        if: github.ref == 'refs/heads/main'
+        run: |
+          git tag -a ${{ env.THE_VERSION }} -m 'Release of v${{ env.THE_VERSION }}'
+        if: github.ref != 'refs/heads/main'
+        run: |
+          git tag -a ${{ env.THE_VERSION }}
 
 # Pre-Alpha
 # "npm --no-git-tag-version --allow-same-version version ${{ env.THE_VERSION }}-${GIT_BRANCH.replaceAll('/', '-')}.${{github.run_number}}"

@@ -172,12 +172,12 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{github.actor}}
-          password: ${{secrets.GITHUB_TOKEN}}
+          password: ${{secrets.GHCR_TOKEN}}
 
       - name: Build Docker Image
         run: |
             ./docker/build-docker.sh -n ${{ env.project_service_name }} -v ${{ env.THE_VERSION }}
-            docker push ghcr.io/<your-GitHub-username>/store:latest
+            docker push ghcr.io/${{secrets.GHCR_USERNAME}}/store:latest
 
 #        run: ./docker/build-docker.sh -n ${{ env.project_service_name }} -v ${{ THE_VERSION }}
 

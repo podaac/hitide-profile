@@ -193,10 +193,6 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY_SERVICE_SIT }}
 #          AWS_ACCESS_KEY_ID: ${{ secrets[format('AWS_ACCESS_KEY_ID_CUMULUS_{0}', env.TARGET_ENV_UPPERCASE)] }}
 #          AWS_SECRET_ACCESS_KEY: ${{ secrets[format('AWS_SECRET_ACCESS_KEY_CUMULUS_{0}', env.TARGET_ENV_UPPERCASE)] }}
-          TF_VAR_docker_tag: ${DOCKER_TAG}
-          TF_VAR_EARTH_DATA_LOGIN_CLIENT_ID: ${{ secrets.EARTH_DATA_LOGIN_CLIENT_ID_SIT }}
-          TF_VAR_EARTH_DATA_LOGIN_PASSWORD: ${{ secrets.EARTH_DATA_LOGIN_PASSWORD_SIT }}
-
         with:
           aws-region: us-west-2
           role-session-name: GitHubActions
@@ -205,10 +201,15 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
         with:
-          terraform_version: 0.12.31
+          terraform_version: 1.0.3
           terraform_wrapper: false
 
       - name: Deploy
+        env: 
+          TF_VAR_docker_tag: ${{ env.DOCKER_TAG }}
+          TF_VAR_EARTH_DATA_LOGIN_CLIENT_ID: ${{ secrets.EARTH_DATA_LOGIN_CLIENT_ID_SIT }}
+          TF_VAR_EARTH_DATA_LOGIN_PASSWORD: ${{ secrets.EARTH_DATA_LOGIN_PASSWORD_SIT }}
+
         run: ls -al ; cd terraform ; terraform init ; terraform plan
 
 

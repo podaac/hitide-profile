@@ -1,4 +1,5 @@
 FROM node:10
+LABEL org.opencontainers.image.source="https://github.com/podaac/hitide-profile"
 RUN npm install forever -g
 
 ENV project_dir /project

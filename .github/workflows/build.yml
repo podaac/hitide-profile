@@ -177,8 +177,7 @@ jobs:
       - name: Build Docker Image
         run: |
             DOCKER_TAG=$(./docker/build-docker.sh -n ${{ env.project_service_name }} -v ${{ env.THE_VERSION }})
-            echo "Docker Tag is ${DOCKER_TAG}"
-#            docker push ghcr.io/${{secrets.GHCR_USERNAME}}/store:latest
+            docker push ghcr.io/${{secrets.GHCR_USERNAME}}/${DOCKER_TAG}
 
 #        run: ./docker/build-docker.sh -n ${{ env.project_service_name }} -v ${{ THE_VERSION }}
 

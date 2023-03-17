@@ -146,26 +146,26 @@ jobs:
           npm run lint
 
 
-      - name: Tag Version
-        run: |
-          git config --local user.name "podaac"
-          git config --local user.email podaac-tva@jpl.nasa.gov
-          git commit -am '/version ${{ env.THE_VERSION }}'
+      # - name: Tag Version
+      #   run: |
+      #     git config --local user.name "podaac"
+      #     git config --local user.email podaac-tva@jpl.nasa.gov
+      #     git commit -am '/version ${{ env.THE_VERSION }}'
 
-      - name: Commit Tagged Version for main release
-        if: github.ref == 'refs/heads/main'
-        run: |
-          git tag -a ${{ env.THE_VERSION }} -m 'Release of v${{ env.THE_VERSION }}'
+      # - name: Commit Tagged Version for main release
+      #   if: github.ref == 'refs/heads/main'
+      #   run: |
+      #     git tag -a ${{ env.THE_VERSION }} -m 'Release of v${{ env.THE_VERSION }}'
 
-      - name: Commit Tagged Version for non-main release
-        if: github.ref != 'refs/heads/main'
-        run: |
-          git tag -a ${{ env.THE_VERSION }}
+      # - name: Commit Tagged Version for non-main release
+      #   if: github.ref != 'refs/heads/main'
+      #   run: |
+      #     git tag -a ${{ env.THE_VERSION }}
 
-      - name: Push tags to origin
-        run: |
-          git push origin HEAD:${{ github.ref }}
-          git push origin ${{ env.THE_VERSION }}
+      # - name: Push tags to origin
+      #   run: |
+      #     git push origin HEAD:${{ github.ref }}
+      #     git push origin ${{ env.THE_VERSION }}
 
 
       - name: Build Docker Image

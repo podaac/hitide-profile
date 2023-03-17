@@ -177,23 +177,44 @@ jobs:
       - name: Build Docker Image
         run: |
             DOCKER_TAG=$(./docker/build-docker.sh -n ${{ env.project_service_name }} -v ${{ env.THE_VERSION }})
+            echo "DOCKER_TAG=${DOCKER_TAG}" >> $GITHUB_ENV
             docker push ${DOCKER_TAG}
+
+
+
+      - name: Set AWS Env Variables
+        run: echo "AWS_ACCESS_KEY_ID=${{ secrets[format('AWS_ACCESS_KEY_ID_CUMULUS_{0}', env.TARGET_ENV_UPPERCASE)] }}" >> $GITHUB_ENV |
+             echo "AWS_SECRET_ACCESS_KEY=${{ secrets[format('AWS_SECRET_ACCESS_KEY_CUMULUS_{0}', env.TARGET_ENV_UPPERCASE)] }}" >> $GITHUB_ENV
+
+      - name: Configure AWS credentials 
+        uses: aws-actions/configure-aws-credentials@v1
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets[format('AWS_ACCESS_KEY_ID_SERVICE_{0}', "SIT")] }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets[format('AWS_SECRET_ACCESS_KEY_SERVICE_{0}', "SIT")] }}
+#          AWS_ACCESS_KEY_ID: ${{ secrets[format('AWS_ACCESS_KEY_ID_CUMULUS_{0}', env.TARGET_ENV_UPPERCASE)] }}
+#          AWS_SECRET_ACCESS_KEY: ${{ secrets[format('AWS_SECRET_ACCESS_KEY_CUMULUS_{0}', env.TARGET_ENV_UPPERCASE)] }}
+          TF_VAR_docker_tag: ${DOCKER_TAG}
+          TF_VAR_EARTH_DATA_LOGIN_CLIENT_ID: ${{ secrets[format('EARTH_DATA_LOGIN_CLIENT_ID_{0}', "SIT")] }}
+          TF_VAR_EARTH_DATA_LOGIN_PASSWORD: ${{ secrets[format('EARTH_DATA_LOGIN_PASSWORD_{0}', "SIT")] }}
+
+        with:
+          aws-region: us-west-2
+          role-session-name: GitHubActions
+      - run: aws sts get-caller-identity
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 0.12.31
+          terraform_wrapper: false
+
+      - name: Deploy
+        run: ls -al ; cd terraform ; terraform init ; terraform plan
+
+
 #            # docker push ghcr.io/${{secrets.GHCR_USERNAME}}/${DOCKER_TAG}
 
 #        run: ./docker/build-docker.sh -n ${{ env.project_service_name }} -v ${{ THE_VERSION }}
-
-
-# Pre-Alpha
-# "npm --no-git-tag-version --allow-same-version version ${{ env.THE_VERSION }}-${GIT_BRANCH.replaceAll('/', '-')}.${{github.run_number}}"
-# Alpha
-# "npm --no-git-tag-version version prerelease"
-# Release Candidate RC
-# "npm --no-git-tag-version version prerelease --preid rc"
-# Release Candidate No RC
-# "npm --no-git-tag-version version ${env.CHANGE_BRANCH.split('/')[-1]}-rc.1"
-# Release
-# the_version = build_info['source_service_version'].split('-')[0]
-
 
 
 

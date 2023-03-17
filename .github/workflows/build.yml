@@ -96,6 +96,7 @@ jobs:
         run: |
             echo "THE_ENV=ops" >> $GITHUB_ENV
             echo "TARGET_ENV_UPPERCASE=OPS" >> $GITHUB_ENV
+            echo "Modifying version number ${{ env.project_version}}"
             echo "THE_VERSION=${env.project_version#*-}" >> $GITHUB_ENV
 
 

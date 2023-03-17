@@ -76,14 +76,14 @@ jobs:
 
       ## Update build-info yaml file for release candidates
       - name: Release Candidate
-        if: ${{ contains(github.base_ref, 'main') }}
+        if: ${{ endsWith(github.ref, '/main') }}
         run: |
             echo "THE_ENV=uat" >> $GITHUB_ENV
             echo "TARGET_ENV_UPPERCASE=UAT" >> $GITHUB_ENV
 
       ## Update build-info yaml file for release
       - name: Release
-        if: ${{ startsWith(github.ref, 'refs/heads/main/') }} &&
+        if: ${{ startsWith(github.ref, 'refs/heads/main') }} &&
           contains(env.THE_VERSION, "rc")
         run: |
             echo "THE_ENV=uat" >> $GITHUB_ENV

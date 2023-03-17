@@ -146,6 +146,10 @@ jobs:
           npm run lint
 
 
+      - name: Tag Version
+        run: |
+          git commit -am '/version ${{ env.THE_VERSION }}'
+
 
 # Pre-Alpha
 # "npm --no-git-tag-version --allow-same-version version ${{ env.THE_VERSION }}-${GIT_BRANCH.replaceAll('/', '-')}.${{github.run_number}}"

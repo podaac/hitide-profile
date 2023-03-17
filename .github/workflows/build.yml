@@ -50,6 +50,7 @@ jobs:
       ## Display branch info
       - name: Branch Info Debugging
         run: |
+            echo '${{ toJSON(github)  }}'
             echo "Github Ref: ${{ github.ref }}"
             echo "Github Base Ref: ${{ github.base_ref }}"
 

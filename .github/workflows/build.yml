@@ -169,7 +169,8 @@ jobs:
 
 
       - name: Build Docker Image
-        run: ./docker/build-docker.sh -n ${{ env.project_service_name }} -v ${{ THE_VERSION }}
+        run: ls -al
+#        run: ./docker/build-docker.sh -n ${{ env.project_service_name }} -v ${{ THE_VERSION }}
 
 
 # Pre-Alpha

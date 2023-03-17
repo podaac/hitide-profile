@@ -99,7 +99,10 @@ jobs:
             echo "THE_VERSION=$(env.project_version##-*)" >> $GITHUB_ENV
 
 
-
+      - name: DEBUG, Show Version
+        run: |
+            echo "The Version: ${{ THE_VERSION }}"
+            echo "The ENV: ${{ THE_ENV }}"
 
 
 

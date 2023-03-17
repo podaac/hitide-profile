@@ -58,7 +58,7 @@ DIST_PATH="dist/"
 
 app_path=$( cd ${SCRIPTPATH}/..  && echo $(pwd) )
 
-repositoryName=podaac/${service_name}
+repositoryName=ghcr.io/podaac/${service_name}
 
 # Docker tags can't include '+' https://github.com/docker/distribution/issues/1201
 dockerTagVersion=$(echo "${service_version}" | tr "+" _)

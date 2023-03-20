@@ -12,7 +12,7 @@ on:
     - 'issue/**' 
     - 'issues/**' 
     - 'dependabot/**'
-    
+
   pull_request:
     branches: 
       - main
@@ -128,6 +128,7 @@ jobs:
             echo "The ENV: ${{ env.THE_ENV }}"
             echo "The Branch: ${{ env.THE_BRANCH }}"
             echo "Github Ref: ${{ github.ref }}"
+            echo "Github PR Base Ref: ${{ github.event.pull_request.base.ref }}"
 
 
       ## Update build-info yaml file for release

@@ -54,12 +54,12 @@ jobs:
             echo "Github Ref: ${{ github.ref }}"
             echo "Github Base Ref: ${{ github.base_ref }}"
 
-
-
       ## NPM Tagging
       - name: Pre Alpha
-        if: ${{ startsWith(github.ref, 'refs/heads/feature/') }} ||
-            ${{ contains(github.ref, 'develop') }}
+        if: |
+          ${{ startsWith(github.ref, 'refs/heads/issue') }}      ||
+          ${{ startsWith(github.ref, 'refs/heads/dependabot/') }} ||
+          ${{ startsWith(github.ref, 'refs/heads/feature/') }}
         run: |
             echo "THE_ENV=sit" >> $GITHUB_ENV
             echo "TARGET_ENV_UPPERCASE=SIT" >> $GITHUB_ENV
@@ -67,12 +67,30 @@ jobs:
 
       ## Update build-info yaml file for alpha
       - name: Alpha
-        if: ${{ startsWith(github.ref, 'refs/heads/develop/') }}
+        if: ${{ github.ref == 'refs/heads/develop' }}
         run: |
             echo "THE_ENV=sit" >> $GITHUB_ENV
             echo "TARGET_ENV_UPPERCASE=SIT" >> $GITHUB_ENV
             echo "THE_VERSION=$(npm --no-git-tag-version version prerelease)" >> $GITHUB_ENV
             
+
+      ## Bump RC Version
+      - name: Bump rc version
+        # If triggered by push to a release branch
+        if: ${{ startsWith(github.ref, 'refs/heads/release/') }}
+        env:
+          # True if the version already has a 'rc' pre-release identifier
+          BUMP_RC: ${{ contains(env.project_version, 'rc') }}
+        run: |
+          if [ "$BUMP_RC" = true ]; then
+            echo "THE_VERSION=$(npm --no-git-tag-version version prerelease --preid rc)" >> $GITHUB_ENV
+          else
+            RELEASE_VERSION=${THE_BRANCH//*\/}
+            echo "THE_VERSION=$(npm --no-git-tag-version version ${{ RELEASE_VERSION }}-rc.1)" >> $GITHUB_ENV
+          fi
+
+          echo "THE_ENV=uat" >> $GITHUB_ENV
+          echo "TARGET_ENV_UPPERCASE=UAT" >> $GITHUB_ENV
 
       ## Update build-info yaml file for release candidates
       - name: Release Candidate
@@ -81,14 +99,6 @@ jobs:
             echo "THE_ENV=uat" >> $GITHUB_ENV
             echo "TARGET_ENV_UPPERCASE=UAT" >> $GITHUB_ENV
 
-      ## Update build-info yaml file for release
-      - name: Release
-        if: ${{ startsWith(github.ref, 'refs/heads/main') }} &&
-          contains(env.THE_VERSION, "rc")
-        run: |
-            echo "THE_ENV=uat" >> $GITHUB_ENV
-            echo "TARGET_ENV_UPPERCASE=UAT" >> $GITHUB_ENV
-            echo "THE_VERSION=$(npm --no-git-tag-version version prerelease --preid rc)" >> $GITHUB_ENV
 
       ## Update build-info yaml file for release
       - name: Release

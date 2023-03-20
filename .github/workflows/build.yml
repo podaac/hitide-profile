@@ -81,11 +81,11 @@ jobs:
         env:
           # True if the version already has a 'rc' pre-release identifier
           BUMP_RC: ${{ contains(env.project_version, 'rc') }}
+          RELEASE_VERSION: ${THE_BRANCH//*\/}
         run: |
-          if [ "$BUMP_RC" = true ]; then
+          if [ "$BUMP_RC" == true ]; then
             echo "THE_VERSION=$(npm --no-git-tag-version version prerelease --preid rc)" >> $GITHUB_ENV
           else
-            RELEASE_VERSION=${THE_BRANCH//*\/}
             echo "THE_VERSION=$(npm --no-git-tag-version version ${{ RELEASE_VERSION }}-rc.1)" >> $GITHUB_ENV
           fi
 

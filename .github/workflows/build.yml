@@ -214,17 +214,17 @@ jobs:
           terraform_version: 1.0.3
           terraform_wrapper: false
 
-      - name: Deploy
-        env: 
-          TF_VAR_docker_tag: ${{ env.DOCKER_TAG }}
-          TF_VAR_EARTH_DATA_LOGIN_CLIENT_ID: ${{ secrets.EARTH_DATA_LOGIN_CLIENT_ID_SIT }}
-          TF_VAR_EARTH_DATA_LOGIN_PASSWORD: ${{ secrets.EARTH_DATA_LOGIN_PASSWORD_SIT }}
+      # - name: Deploy
+      #   env: 
+      #     TF_VAR_docker_tag: ${{ env.DOCKER_TAG }}
+      #     TF_VAR_EARTH_DATA_LOGIN_CLIENT_ID: ${{ secrets.EARTH_DATA_LOGIN_CLIENT_ID_SIT }}
+      #     TF_VAR_EARTH_DATA_LOGIN_PASSWORD: ${{ secrets.EARTH_DATA_LOGIN_PASSWORD_SIT }}
 
-        run: |
-            cd terraform
-            ls -al
-            ls bin
-            bin/deploy.sh -v sit --app-version ${{ env.THE_VERSION }}
+      #   run: |
+      #       cd terraform
+      #       ls -al
+      #       ls bin
+      #       bin/deploy.sh -v sit --app-version ${{ env.THE_VERSION }}
 
 #            bin/deploy.sh -v ${{ env.THE_ENV }} --app-version ${{ env.THE_VERSION }}
 

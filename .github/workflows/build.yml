@@ -81,12 +81,12 @@ jobs:
         env:
           # True if the version already has a 'rc' pre-release identifier
           BUMP_RC: ${{ contains(env.project_version, 'rc') }}
+          RELEASE_VERSION: ${THE_BRANCH//*\/}
         run: |
-          if [ "$BUMP_RC" = true ]; then
+          if [ "$BUMP_RC" == true ]; then
             echo "THE_VERSION=$(npm --no-git-tag-version version prerelease --preid rc)" >> $GITHUB_ENV
           else
-            RELEASE_VERSION=${THE_BRANCH//*\/}
-            echo "THE_VERSION=$(npm --no-git-tag-version version ${{ RELEASE_VERSION }}-rc.1)" >> $GITHUB_ENV
+            echo "THE_VERSION=$(npm --no-git-tag-version version ${{ env.RELEASE_VERSION }}-rc.1)" >> $GITHUB_ENV
           fi
 
           echo "THE_ENV=uat" >> $GITHUB_ENV
@@ -115,6 +115,8 @@ jobs:
         run: |
             echo "The Version: ${{ env.THE_VERSION }}"
             echo "The ENV: ${{ env.THE_ENV }}"
+            echo "The Branch: ${{ env.THE_BRANCH }}"
+            echo "Github Ref: ${{ github.ref }}"
 
 
       ## Update build-info yaml file for release
@@ -214,17 +216,17 @@ jobs:
           terraform_version: 1.0.3
           terraform_wrapper: false
 
-      - name: Deploy
-        env: 
-          TF_VAR_docker_tag: ${{ env.DOCKER_TAG }}
-          TF_VAR_EARTH_DATA_LOGIN_CLIENT_ID: ${{ secrets.EARTH_DATA_LOGIN_CLIENT_ID_SIT }}
-          TF_VAR_EARTH_DATA_LOGIN_PASSWORD: ${{ secrets.EARTH_DATA_LOGIN_PASSWORD_SIT }}
+      # - name: Deploy
+      #   env: 
+      #     TF_VAR_docker_tag: ${{ env.DOCKER_TAG }}
+      #     TF_VAR_EARTH_DATA_LOGIN_CLIENT_ID: ${{ secrets.EARTH_DATA_LOGIN_CLIENT_ID_SIT }}
+      #     TF_VAR_EARTH_DATA_LOGIN_PASSWORD: ${{ secrets.EARTH_DATA_LOGIN_PASSWORD_SIT }}
 
-        run: |
-            cd terraform
-            ls -al
-            ls bin
-            bin/deploy.sh -v sit --app-version ${{ env.THE_VERSION }}
+      #   run: |
+      #       cd terraform
+      #       ls -al
+      #       ls bin
+      #       bin/deploy.sh -v sit --app-version ${{ env.THE_VERSION }}
 
 #            bin/deploy.sh -v ${{ env.THE_ENV }} --app-version ${{ env.THE_VERSION }}
 

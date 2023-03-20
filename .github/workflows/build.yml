@@ -211,6 +211,7 @@ jobs:
           TF_VAR_EARTH_DATA_LOGIN_PASSWORD: ${{ secrets.EARTH_DATA_LOGIN_PASSWORD_SIT }}
 
         run: |
+            cd terraform
             ls -al
             ls bin
             bin/deploy.sh -v ${{ env.THE_ENV }} --app-version ${{ env.THE_VERSION }}

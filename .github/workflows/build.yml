@@ -115,6 +115,8 @@ jobs:
         run: |
             echo "The Version: ${{ env.THE_VERSION }}"
             echo "The ENV: ${{ env.THE_ENV }}"
+            echo "The Branch: ${{ env.THE_BRANCH }}"
+            echo "Github Ref: ${{ github.ref }}"
 
 
       ## Update build-info yaml file for release

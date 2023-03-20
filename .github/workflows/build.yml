@@ -214,8 +214,9 @@ jobs:
             cd terraform
             ls -al
             ls bin
-            bin/deploy.sh -v ${{ env.THE_ENV }} --app-version ${{ env.THE_VERSION }}
+            bin/deploy.sh -v sit --app-version ${{ env.THE_VERSION }}
 
+#            bin/deploy.sh -v ${{ env.THE_ENV }} --app-version ${{ env.THE_VERSION }}
 
 #            # docker push ghcr.io/${{secrets.GHCR_USERNAME}}/${DOCKER_TAG}
 

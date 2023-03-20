@@ -94,11 +94,13 @@ jobs:
           BUMP_RC: ${{ contains(env.project_version, 'rc') }}
           RELEASE_VERSION: ${THE_BRANCH//*\/}
         run: |
+          echo "BUMP_RC: $BUMP_RC"
           if [ "$BUMP_RC" == true ]; then
             echo "THE_VERSION=$(npm --no-git-tag-version version prerelease --preid rc)" >> $GITHUB_ENV
           else
             echo "THE_VERSION=$(npm --no-git-tag-version version ${{ env.RELEASE_VERSION }}-rc.1)" >> $GITHUB_ENV
           fi
+          echo "The Version: $THE_VERSION"
 
           echo "THE_ENV=uat" >> $GITHUB_ENV
           echo "TARGET_ENV_UPPERCASE=UAT" >> $GITHUB_ENV

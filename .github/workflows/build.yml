@@ -210,7 +210,7 @@ jobs:
           TF_VAR_EARTH_DATA_LOGIN_CLIENT_ID: ${{ secrets.EARTH_DATA_LOGIN_CLIENT_ID_SIT }}
           TF_VAR_EARTH_DATA_LOGIN_PASSWORD: ${{ secrets.EARTH_DATA_LOGIN_PASSWORD_SIT }}
 
-        run: ls -al ; cd terraform ; terraform init ; terraform plan
+        run: bin/deploy.sh -v ${{ env.THE_ENV }} --app-version ${{ env.THE_VERSION }}
 
 
 #            # docker push ghcr.io/${{secrets.GHCR_USERNAME}}/${DOCKER_TAG}

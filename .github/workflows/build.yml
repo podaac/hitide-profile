@@ -150,7 +150,7 @@ jobs:
       - name: Commit Tagged Version for non-main release
         if: github.ref != 'refs/heads/main'
         run: |
-          git tag -a ${{ env.THE_VERSION }}
+          git tag -a ${{ env.THE_VERSION }} -m ''
 
       - name: Push tags to origin
         run: |

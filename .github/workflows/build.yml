@@ -56,17 +56,8 @@ jobs:
           GITHUB_REF_READABLE="${GITHUB_REF//\//-}"
           echo "GITHUB_REF_READABLE=${GITHUB_REF_READABLE}" >> $GITHUB_ENV
 
-
-
-      ## Display branch info
-      - name: Branch Info Debugging
-        run: |
-            echo '${{ toJSON(github)  }}'
-            echo "Github Ref: ${{ github.ref }}"
-            echo "Github Base Ref: ${{ github.base_ref }}"
-
-      ## NPM Tagging
-      - name: Pre Alpha
+      ## Pre-Alpha Version Generation
+      - name: Version Generation for Pre-Alpha
         if: |
           ${{ startsWith(github.ref, 'refs/heads/issue') }}      ||
           ${{ startsWith(github.ref, 'refs/heads/dependabot/') }} ||
@@ -76,8 +67,8 @@ jobs:
             echo "TARGET_ENV_UPPERCASE=SIT" >> $GITHUB_ENV
             echo "THE_VERSION=$(npm --no-git-tag-version --allow-same-version version ${{ env.THE_VERSION }}-${{ env.GITHUB_REF_READABLE }}.${{ github.run_number }})" >> $GITHUB_ENV
 
-      ## Update build-info yaml file for alpha
-      - name: Alpha
+      ## Alpha Version Generation
+      - name: Version Generation for Alpha
         if: ${{ github.ref == 'refs/heads/develop' }}
         run: |
             echo "THE_ENV=sit" >> $GITHUB_ENV
@@ -86,7 +77,7 @@ jobs:
             
 
       ## Bump RC Version
-      - name: Bump rc version
+      - name: Version Generation for Release Candidates
         # If triggered by push to a release branch
         if: ${{ startsWith(github.ref, 'refs/heads/release/') }}
         env:
@@ -94,29 +85,16 @@ jobs:
           BUMP_RC: ${{ contains(env.project_version, 'rc') }}
           RELEASE_VERSION: ${THE_BRANCH//*\/}
         run: |
-          echo "BUMP_RC: $BUMP_RC"
           if [ "$BUMP_RC" == true ]; then
-            echo "Bumping RC"
             echo "THE_VERSION=$(npm --no-git-tag-version version prerelease --preid rc)" >> $GITHUB_ENV
           else
-            echo "Not bumping RC"
             echo "THE_VERSION=$(npm --no-git-tag-version version ${{ env.RELEASE_VERSION }}-rc.1)" >> $GITHUB_ENV
           fi
-          echo "The Version: $THE_VERSION"
-
           echo "THE_ENV=uat" >> $GITHUB_ENV
           echo "TARGET_ENV_UPPERCASE=UAT" >> $GITHUB_ENV
 
-      ## Update build-info yaml file for release candidates
-      - name: Release Candidate
-        if: ${{ endsWith(github.ref, '/main') }}
-        run: |
-            echo "THE_ENV=uat" >> $GITHUB_ENV
-            echo "TARGET_ENV_UPPERCASE=UAT" >> $GITHUB_ENV
-
-
-      ## Update build-info yaml file for release
-      - name: Release
+      ## Update build-info yaml file for release (Pull requests targeting main)
+      - name: Version Generation for Releases
         if: ${{ github.event.pull_request.base.ref == 'main' }}
         run: |
             echo "THE_ENV=ops" >> $GITHUB_ENV
@@ -125,32 +103,22 @@ jobs:
             THE_VERSION=${{ env.project_version }}
             echo "THE_VERSION=${THE_VERSION//-*}" >> $GITHUB_ENV
 
-
-      - name: DEBUG, Show Version
-        run: |
-            echo "The Version: ${{ env.THE_VERSION }}"
-            echo "The ENV: ${{ env.THE_ENV }}"
-            echo "The Branch: ${{ env.THE_BRANCH }}"
-            echo "Github Ref: ${{ github.ref }}"
-            echo "Github PR Base Ref: ${{ github.event.pull_request.base.ref }}"
-
-
       ## Update build-info yaml file for release
-      - name: Update YAML file with release-specific configs
+      - name: Update YAML file with release-specific config values - build_service_version
         uses: fjogeleit/yaml-update-action@main
         with:
           valueFile: 'build-info.yaml'
           propertyPath: 'build_service_version'
           value: ${{ env.THE_VERSION }}
           commitChange: false
-      - name: Update YAML file with release-specific configs
-        uses: fjogeleit/yaml-update-action@main
-        with:
-          valueFile: 'build-info.yaml'
-          propertyPath: 'artifactory_base_path'
-          value: ${{ env.ART_BASE_PATH }}
-          commitChange: false
-      - name: Update YAML file with release-specific configs
+      # - name: Update YAML file with release-specific config values
+      #   uses: fjogeleit/yaml-update-action@main
+      #   with:
+      #     valueFile: 'build-info.yaml'
+      #     propertyPath: 'artifactory_base_path'
+      #     value: ${{ env.ART_BASE_PATH }}
+      #     commitChange: false
+      - name: Update YAML file with release-specific configs - deploy_env
         uses: fjogeleit/yaml-update-action@main
         with:
           valueFile: 'build-info.yaml'
@@ -158,242 +126,90 @@ jobs:
           value: ${{ env.THE_ENV }}
           commitChange: false
 
+      ## NPM Lint and Install
+      - name: NPM Lint
+        uses: actions/setup-node@v3
+        with:
+          node-version: 14
+      - run: |
+          npm install
+          npm run lint
+
+      ## Tag and push the tags back to github
+      - name: Tag Version
+        run: |
+          git config --local user.name "podaac"
+          git config --local user.email podaac-tva@jpl.nasa.gov
+          git commit -am '/version ${{ env.THE_VERSION }}'
+
+      - name: Commit Tagged Version for main release
+        if: github.ref == 'refs/heads/main'
+        run: |
+          git tag -a ${{ env.THE_VERSION }} -m 'Release of v${{ env.THE_VERSION }}'
+
+      - name: Commit Tagged Version for non-main release
+        if: github.ref != 'refs/heads/main'
+        run: |
+          git tag -a ${{ env.THE_VERSION }}
+
+      - name: Push tags to origin
+        run: |
+          git push origin HEAD:${{ github.ref }}
+          git push origin ${{ env.THE_VERSION }}
+
+      ## Authenticate to GHCR.io for publishing docker containers
+      - name: 'Login to GitHub Container Registry'
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{github.actor}}
+          password: ${{secrets.GHCR_TOKEN}}
+
+      ## Build docker image
+      - name: Build Docker Image
+        run: |
+            DOCKER_TAG=$(./docker/build-docker.sh -n ${{ env.project_service_name }} -v ${{ env.THE_VERSION }})
+            echo "DOCKER_TAG=${DOCKER_TAG}" >> $GITHUB_ENV
+            docker push ${DOCKER_TAG}
+
+
+      ## AWS Deployment
+      - name: Configure AWS Credentials as Environment Variables
+        run: echo "AWS_ACCESS_KEY_ID=${{ secrets[format('AWS_ACCESS_KEY_ID_CUMULUS_{0}', env.TARGET_ENV_UPPERCASE)] }}" >> $GITHUB_ENV |
+             echo "AWS_SECRET_ACCESS_KEY=${{ secrets[format('AWS_SECRET_ACCESS_KEY_CUMULUS_{0}', env.TARGET_ENV_UPPERCASE)] }}" >> $GITHUB_ENV
+
+      - name: Validate AWS Credentials 
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: us-west-2
+          role-session-name: GitHubActions
+      - run: aws sts get-caller-identity
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.0.3
+          terraform_wrapper: false
+
+      - name: Deploy via Terraform
+        env: 
+          TF_VAR_docker_tag: ${{ env.DOCKER_TAG }}
+          TF_VAR_EARTH_DATA_LOGIN_CLIENT_ID: ${{ secrets.EARTH_DATA_LOGIN_CLIENT_ID_SIT }}
+          TF_VAR_EARTH_DATA_LOGIN_PASSWORD: ${{ secrets.EARTH_DATA_LOGIN_PASSWORD_SIT }}
+        run: |
+           cd terraform
+
+
+      ## SHOW DEBUG INFO
+      - name: Build Configuration Complete for Version ${{ env.THE_VERSION }}
+        run: |
+            echo "The Version: ${{ env.THE_VERSION }}"
+            echo "The ENV: ${{ env.THE_ENV }}"
+            echo "The Branch: ${{ env.THE_BRANCH }}"
+            echo "Github Ref: ${{ github.ref }}"
+            echo "Github PR Base Ref: ${{ github.event.pull_request.base.ref }}"
+            echo '${{ toJSON(github)  }}'
+            echo "Github Ref: ${{ github.ref }}"
+            echo "Github Base Ref: ${{ github.base_ref }}"
+            cat build-info.yaml
 
-      - name: Show updated YAML file
-        run: cat build-info.yaml
-
-
-
-
-      # - name: NPM Lint
-      #   uses: actions/setup-node@v3
-      #   with:
-      #     node-version: 14
-      # - run: |
-      #     npm install
-      #     npm run lint
-
-
-      # - name: Tag Version
-      #   run: |
-      #     git config --local user.name "podaac"
-      #     git config --local user.email podaac-tva@jpl.nasa.gov
-      #     git commit -am '/version ${{ env.THE_VERSION }}'
-
-      # - name: Commit Tagged Version for main release
-      #   if: github.ref == 'refs/heads/main'
-      #   run: |
-      #     git tag -a ${{ env.THE_VERSION }} -m 'Release of v${{ env.THE_VERSION }}'
-
-      # - name: Commit Tagged Version for non-main release
-      #   if: github.ref != 'refs/heads/main'
-      #   run: |
-      #     git tag -a ${{ env.THE_VERSION }}
-
-      # - name: Push tags to origin
-      #   run: |
-      #     git push origin HEAD:${{ github.ref }}
-      #     git push origin ${{ env.THE_VERSION }}
-
-      # - name: 'Login to GitHub Container Registry'
-      #   uses: docker/login-action@v1
-      #   with:
-      #     registry: ghcr.io
-      #     username: ${{github.actor}}
-      #     password: ${{secrets.GHCR_TOKEN}}
-
-      # - name: Build Docker Image
-      #   run: |
-      #       DOCKER_TAG=$(./docker/build-docker.sh -n ${{ env.project_service_name }} -v ${{ env.THE_VERSION }})
-      #       echo "DOCKER_TAG=${DOCKER_TAG}" >> $GITHUB_ENV
-      #       docker push ${DOCKER_TAG}
-
-
-
-      # - name: Set AWS Env Variables
-      #   run: echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID_SERVICES_SIT }}" >> $GITHUB_ENV |
-      #        echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY_SERVICES_SIT }}" >> $GITHUB_ENV
-
-      # - name: Configure AWS credentials 
-      #   uses: aws-actions/configure-aws-credentials@v1
-##        env:
-##          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID_SERVICES_SIT }}
-##          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY_SERVICES_SIT }}
-##          AWS_ACCESS_KEY_ID: ${{ secrets[format('AWS_ACCESS_KEY_ID_CUMULUS_{0}', env.TARGET_ENV_UPPERCASE)] }}
-##          AWS_SECRET_ACCESS_KEY: ${{ secrets[format('AWS_SECRET_ACCESS_KEY_CUMULUS_{0}', env.TARGET_ENV_UPPERCASE)] }}
-      #   with:
-      #     aws-region: us-west-2
-      #     role-session-name: GitHubActions
-      # - run: aws sts get-caller-identity
-
-      # - name: Setup Terraform
-      #   uses: hashicorp/setup-terraform@v2
-      #   with:
-      #     terraform_version: 1.0.3
-      #     terraform_wrapper: false
-
-
-
-
-
-      # - name: Deploy
-      #   env: 
-      #     TF_VAR_docker_tag: ${{ env.DOCKER_TAG }}
-      #     TF_VAR_EARTH_DATA_LOGIN_CLIENT_ID: ${{ secrets.EARTH_DATA_LOGIN_CLIENT_ID_SIT }}
-      #     TF_VAR_EARTH_DATA_LOGIN_PASSWORD: ${{ secrets.EARTH_DATA_LOGIN_PASSWORD_SIT }}
-
-      #   run: |
-      #       cd terraform
-      #       ls -al
-      #       ls bin
-      #       bin/deploy.sh -v sit --app-version ${{ env.THE_VERSION }}
-
-#            bin/deploy.sh -v ${{ env.THE_ENV }} --app-version ${{ env.THE_VERSION }}
-
-#            # docker push ghcr.io/${{secrets.GHCR_USERNAME}}/${DOCKER_TAG}
-
-#        run: ./docker/build-docker.sh -n ${{ env.project_service_name }} -v ${{ THE_VERSION }}
-
-
-
-
-      # - name: Deploy
-      #   run: ls -al ; cat build-info.yaml ; cd terraform ; terraform init -reconfigure -input=false -backend-config=bucket=podaac-services-${{ env.TARGET_ENV }}-terraform ; terraform output hitide-bucket-name
-
-
-#            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID_SERVICES_ }}
-#            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY_SERVICES_ }}
-#         container:
-#           image: ${{ env.ARTIFACTORY_DOCKER_REGISTRY }}/podaac/service/deploy-terraform-0.12.31
-
-
-#      node:14.5.0-alpine
-
-
-
-
-      # Skip Build
-
-      # Run Build
-        # Version
-          # Pre Alpha
-          # Alpha
-          # Minor
-          # Release Candidate
-          # Release
-      # Test
-
-      # Publish
-        # Tag Version
-
-      # Publish Docker Image
-        # Build Image
-        # Publish to Repository
-
-      # Deploy to ECR
-
-      # Deploy Terraform
-
-
-
-
-      # # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      # - uses: actions/checkout@v2
-      # - uses: actions/setup-python@v2
-      #   with:
-      #     python-version: 3.8
-
-      # ## Describe workspace
-      # - name: Describe Workspace
-      #   run: |
-      #     echo "---" >build-info.yaml;
-      #     echo "  build_environment: \"the_env\"" >>build-info.yaml; 
-      #     ls -al
-      #     cat build-info.yaml
-
-      # ## Update build-info yaml file for pre-alpha
-      # - name: Pre Alpha
-      #   if: ${{ startsWith(github.ref, 'refs/heads/feature/') }} ||
-      #       ${{ contains(github.base_ref, 'develop') }}
-      #   run: echo "TARGET_ENV=sit" >> $GITHUB_ENV|
-      #        echo "TARGET_ENV_UPPERCASE=SIT" >> $GITHUB_ENV
-
-      # ## Update build-info yaml file for alpha
-      # - name: Alpha
-      #   if: ${{ startsWith(github.ref, 'refs/heads/develop/') }}
-      #   run: echo "TARGET_ENV=sit" >> $GITHUB_ENV|
-      #        echo "TARGET_ENV_UPPERCASE=SIT" >> $GITHUB_ENV
-
-      # ## Update build-info yaml file for release candidates
-      # - name: Release Candidate
-      #   if: ${{ contains(github.base_ref, 'master') }}
-      #   run: echo "TARGET_ENV=uat" >> $GITHUB_ENV|
-      #        echo "TARGET_ENV_UPPERCASE=UAT" >> $GITHUB_ENV
-
-      # ## Update build-info yaml file for release
-      # - name: Release
-      #   if: ${{ startsWith(github.ref, 'refs/heads/master/') }}
-      #   run: echo "TARGET_ENV=ops" >> $GITHUB_ENV |
-      #        echo "TARGET_ENV_UPPERCASE=OPS" >> $GITHUB_ENV
-
-      # ## Update build-info yaml file for release
-      # - name: Release
-      #   if: env.TARGET_ENV == 'sit' || 
-      #       env.TARGET_ENV == 'uat' || 
-      #       env.TARGET_ENV == 'ops'
-      #   uses: fjogeleit/yaml-update-action@main
-      #   with:
-      #     valueFile: 'build-info.yaml'
-      #     propertyPath: 'deploy_env'
-      #     value: ${{ env.TARGET_ENV }}
-      #     commitChange: false
-
-
-      # # ## Test Configuration file
-      # # - name: Display Configs
-      # #   run: | 
-      # #     cat build-info.yaml
-      # #     echo "::set-env name=TARGET_ENV::$( cat build-info.yaml.json | jq --compact-output )"
-
-      # ## Deployment
-
-      #   # if: ${{ startsWith(github.ref, 'refs/heads/develop/') }} ||
-      #   #     ${{ startsWith(github.ref, 'refs/heads/master/') }} ||
-      #   #     ${{ contains(github.base_ref, 'master') }} ||
-      #   #     ${{ startsWith(github.ref, 'refs/heads/master/') }}
-      # - name: Set AWS Env Variables
-      #   run: echo "AWS_ACCESS_KEY_ID=${{ secrets[format('AWS_ACCESS_KEY_ID_SERVICES_{0}', env.TARGET_ENV_UPPERCASE)] }}" >> $GITHUB_ENV |
-      #        echo "AWS_SECRET_ACCESS_KEY=${{ secrets[format('AWS_SECRET_ACCESS_KEY_SERVICES_{0}', env.TARGET_ENV_UPPERCASE)] }}" >> $GITHUB_ENV
-
-      # - name: Configure AWS credentials 
-      #   uses: aws-actions/configure-aws-credentials@v1
-      #   env:
-      #     AWS_ACCESS_KEY_ID: ${{ secrets[format('AWS_ACCESS_KEY_ID_SERVICES_{0}', env.TARGET_ENV_UPPERCASE)] }}
-      #     AWS_SECRET_ACCESS_KEY: ${{ secrets[format('AWS_SECRET_ACCESS_KEY_SERVICES_{0}', env.TARGET_ENV_UPPERCASE)] }}
-      #   with:
-      #     aws-region: us-west-2
-      #     role-session-name: GitHubActions
-      # - run: aws sts get-caller-identity
-
-      # - name: Setup Terraform
-      #   uses: hashicorp/setup-terraform@v2
-      #   with:
-      #     terraform_version: 0.12.31
-      #     terraform_wrapper: false
-
-      # - name: Deploy
-      #   run: ls -al ; cat build-info.yaml ; cd terraform ; terraform init -reconfigure -input=false -backend-config=bucket=podaac-services-${{ env.TARGET_ENV }}-terraform ; terraform output hitide-bucket-name
-
-
-#            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID_SERVICES_ }}
-#            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY_SERVICES_ }}
-#         container:
-#           image: ${{ env.ARTIFACTORY_DOCKER_REGISTRY }}/podaac/service/deploy-terraform-0.12.31
-
-          # ports:
-
-          #   - 80
-          # volumes:
-          #   - /home/cm/.aws:/home/dockeruser/.aws:ro
-          # options: --cpus 1
-          # run: ls -al

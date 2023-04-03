@@ -3,7 +3,6 @@ terraform {
     bucket  = "podaac-services-sit-terraform" # will be overridden from command line during build
     key     = "services/hitide-profile/terraform.tfstate"
     region  = "us-west-2"
-    #profile = "ngap-service-sit"  will be overridden from command line during build
   }
 
   required_providers {
@@ -16,8 +15,6 @@ terraform {
 
 provider "aws" {
   region                  = "us-west-2"
-  #shared_credentials_file = var.credentials
-  #profile                 = var.profile
 
   ignore_tags {
     key_prefixes = ["gsfc-ngap"]

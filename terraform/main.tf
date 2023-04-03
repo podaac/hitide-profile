@@ -3,7 +3,7 @@ terraform {
     bucket  = "podaac-services-sit-terraform" # will be overridden from command line during build
     key     = "services/hitide-profile/terraform.tfstate"
     region  = "us-west-2"
-    profile = "ngap-service-sit" # will be overridden from command line during build
+    #profile = "ngap-service-sit"  will be overridden from command line during build
   }
 
   required_providers {
@@ -16,8 +16,8 @@ terraform {
 
 provider "aws" {
   region                  = "us-west-2"
-  shared_credentials_file = var.credentials
-  profile                 = var.profile
+  #shared_credentials_file = var.credentials
+  #profile                 = var.profile
 
   ignore_tags {
     key_prefixes = ["gsfc-ngap"]
@@ -35,9 +35,6 @@ locals {
   } : var.default_tags
 
   certificate_name = var.stage == "ops" ? "internal-hitide-alb.profile.podaac.earthdatacloud.nasa.gov" : "internal-hitide-alb.profile.podaac.${var.stage}.earthdatacloud.nasa.gov"
-
-
-  full_docker_tag = "${data.aws_caller_identity.current.account_id}.dkr.ecr.us-west-2.amazonaws.com/${var.docker_tag}"
 }
 
 

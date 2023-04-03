@@ -20,7 +20,7 @@ Thank you for contributing to HiTIDE Profile!
 ## How to Get Help
 
 The easiest way to get help or ask a question regarding HiTIDE Profile is in 
-the EOSDIS Slack #harmony-l2ss-py channel, or by asking a question 
+the JPL Slack #podaac-l2ss_hitide channel, or by asking a question 
 on the [PO.DAAC Forum](https://podaac.jpl.nasa.gov/forum/viewforum.php?f=6).
 
 ## How to Contribute

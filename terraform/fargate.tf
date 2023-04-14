@@ -25,7 +25,7 @@ resource "aws_ssm_parameter" "earth_data_login_password" {
 resource "aws_security_group" "hitide_profile" {
   name        = "${local.ec2_resources_name}-sg"
   description = "Control traffic for the hitide-profile api"
-  vpc_id      = var.vpc_id
+  vpc_id      = data.aws_vpc.default.id
 
   ingress = [
     {
@@ -79,7 +79,7 @@ resource "aws_ecs_task_definition" "fargate_task" {
   container_definitions = jsonencode([
     {
       name    = "${local.ec2_resources_name}-fargate-task"
-      image   = "${local.full_docker_tag}"
+      image   = var.hitide_profile_docker_image
       command = ["/bin/bash", "-c", "node mysql/setup-db.js && docker/docker-start-command"]
       secrets = [
         {
@@ -196,7 +196,7 @@ resource "aws_ecs_service" "hitide_profile" {
   desired_count   = 1
 
   network_configuration {
-    subnets         = var.private_subnets
+    subnets         = data.aws_subnets.private.ids
     security_groups = [aws_ssm_parameter.db_sg.value, aws_security_group.hitide_profile.id]
   }
 

@@ -12,7 +12,7 @@ on:
     - 'issue/**' 
     - 'issues/**' 
     - 'dependabot/**'
-    
+
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
@@ -94,6 +94,31 @@ jobs:
             echo "Modifying version number ${{ env.project_version}}"
             THE_VERSION=${{ env.project_version }}
             echo "THE_VERSION=${THE_VERSION//-*}" >> $GITHUB_ENV
+
+
+      - name: Run Snyk as a blocking step
+        uses: snyk/actions/node@master
+        env:
+            SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          command: test
+          args: >
+              --org=${{ secrets.SNYK_ORG_ID }}
+              --project-name=${{ github.repository }}
+              --severity-threshold=high
+              --fail-on=all
+
+
+      - name: Run Snyk on Node
+        uses: snyk/actions/node@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          command: monitor
+          args: >
+            --org=${{ secrets.SNYK_ORG_ID }}
+            --project-name=${{ github.repository }}
+
 
       - name: Commit Version Bump
         # If building develop, a release branch, or main then we commit the version bump back to the repo

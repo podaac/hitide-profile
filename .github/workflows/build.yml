@@ -79,7 +79,7 @@ jobs:
           if [ "$BUMP_RC" == true ]; then
             echo "THE_VERSION=$(npm --no-git-tag-version version prerelease --preid rc)" >> $GITHUB_ENV
           else
-            echo "THE_VERSION=$(npm --no-git-tag-version version ${{ env.RELEASE_VERSION }}-rc.1)" >> $GITHUB_ENV
+            echo "THE_VERSION=$(npm --no-git-tag-version version ${GITHUB_REF#refs/heads/release/}-rc.1)" >> $GITHUB_ENV
           fi
 
           echo "THE_ENV=uat" >> $GITHUB_ENV

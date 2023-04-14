@@ -55,9 +55,9 @@ jobs:
       ## NPM Tagging
       - name: Pre Alpha
         if: |
-          ${{ startsWith(github.ref, 'refs/heads/issue') }}      ||
-          ${{ startsWith(github.ref, 'refs/heads/dependabot/') }} ||
-          ${{ startsWith(github.ref, 'refs/heads/feature/') }}
+          startsWith(github.ref, 'refs/heads/issue') ||
+          startsWith(github.ref, 'refs/heads/dependabot/') ||
+          startsWith(github.ref, 'refs/heads/feature/')
         run: |
             echo "THE_ENV=sit" >> $GITHUB_ENV
             echo "TARGET_ENV_UPPERCASE=SIT" >> $GITHUB_ENV
@@ -65,7 +65,7 @@ jobs:
 
       ## Set Alpha variables
       - name: Alpha
-        if: ${{ github.ref == 'refs/heads/develop' }}
+        if: github.ref == 'refs/heads/develop'
         run: |
             echo "THE_ENV=sit" >> $GITHUB_ENV
             echo "TARGET_ENV_UPPERCASE=SIT" >> $GITHUB_ENV

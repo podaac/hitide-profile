@@ -22,9 +22,9 @@ jobs:
           ref: 'refs/heads/develop'
       - name: Bump minor version
         run: |
+          git config --global user.name 'hitide-profile bot'
+          git config --global user.email 'hitide-profile@noreply.github.com'        
           npm version prepatch -m '/version %s'
       - name: Commit Version Bump
         run: |
-          git config --global user.name 'hitide-profile bot'
-          git config --global user.email 'hitide-profile@noreply.github.com'
           git push

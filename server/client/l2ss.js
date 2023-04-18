@@ -15,13 +15,16 @@ async function submitJob(job) {
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: params
     }).then(response => {
+        console.log(response);
         if (response.status !== 200) {
             const e = new Error(`${response.status}  ${response.statusText}`);
             e.tag = "STATUS_CODE_ERROR";
             return e;
         }
+        console.log(response.text());
         return response.text();
     }).then(data => {
+        console.log(data);
         let obj = data;
         while (typeof obj === "string") {
             obj = JSON.parse(obj);
@@ -36,10 +39,12 @@ async function submitJob(job) {
             return e;
         }
         // handle success
+        console.log(token);
         return token;
     }).catch(err => {
         const e = new Error(err);
         e.tag = "REQUEST_ERROR";
+        console.log(e);
         return e;
     });
 }

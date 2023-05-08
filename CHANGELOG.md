@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 
-## [4.9.5]
+## [4.9.6]
 ### Added
 - Implement github actions workflow
 - Moved source to github.com

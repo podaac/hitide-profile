@@ -1,6 +1,6 @@
-# Contributing to TIG
+# Contributing to HiTIDE Profile
 
-Thank you for contributing to TIG!
+Thank you for contributing to HiTIDE Profile!
 
 ### Table of Contents
 
@@ -19,8 +19,8 @@ Thank you for contributing to TIG!
 
 ## How to Get Help
 
-The easiest way to get help or ask a question regarding TIG is in 
-the EOSDIS Slack #harmony-l2ss-py channel, or by asking a question 
+The easiest way to get help or ask a question regarding HiTIDE Profile is in 
+the JPL Slack #podaac-l2ss_hitide channel, or by asking a question 
 on the [PO.DAAC Forum](https://podaac.jpl.nasa.gov/forum/viewforum.php?f=6).
 
 ## How to Contribute
@@ -30,7 +30,7 @@ on the [PO.DAAC Forum](https://podaac.jpl.nasa.gov/forum/viewforum.php?f=6).
 Bugs can be reported by creating a new Github issue in this repository. 
 Please use the `bug` label on any bug issue created. Provide detailed 
 instructions on how to reproduce the bug if possible. Include the version 
-of TIG that produced this bug and specific error messages.
+of HiTIDE Profile that produced this bug and specific error messages.
 
 ### Feature/Enhancement Requests
 
@@ -88,7 +88,7 @@ If any performance improvements are being made, include graphs and charts.
 
 ### Changelog
 
-TIG maintains a [changelog](CHANGELOG.md). See 
+HiTIDE Profile maintains a [changelog](CHANGELOG.md). See 
 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) for more 
 information.
 
@@ -179,25 +179,3 @@ conditions that triggered the bug
 features or old documentation updated for any changed features
 - Code/curl examples or sample data have been updated as necessary
 - Has the CHANGELOG been updated?
-
-## Style Guides
-
-### Python Style Guide
-
-TIG follows PEP8 as much as possible. Reference the [pylint](.pylintrc) and 
-[flake8](.flake8) configuration files for specific expectations. The CI/CD pipeline 
-will fail unless there are 0 flake8 warnings and anything other than a 
-10/10 pylint score.
-
-Please keep any Harmony or CMR-specific code out of the actual subset 
-code. The subsetter should be able to run locally without any reliance 
-on outside services.
-
-### Documentation
-
-TIG uses [Numpy docstrings](https://numpydoc.readthedocs.io/en/latest/format.html). 
-All functions should contain a docstring, though short or trivial 
-function may contain a 1-line docstring. 
-
-If adding a new module, ensure it has been added to [index.rst](docs/index.rst) 
-for inclusion in auto-generated Sphinx docs.

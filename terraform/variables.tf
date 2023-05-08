@@ -10,12 +10,6 @@ variable "app_version" {
   default = ""
 }
 
-variable "vpc_id" {}
-
-variable "private_subnets" {
-  type = list(string)
-}
-
 variable "default_tags" {
   type    = map(string)
   default = {}
@@ -87,3 +81,5 @@ variable "EARTH_DATA_LOGIN_PASSWORD" {}
 variable "LIST_OF_AUTHORIZED_CORS_REQUESTER_ORIGINS" {
   default = ""
 }
+
+variable "hitide_profile_docker_image" {}

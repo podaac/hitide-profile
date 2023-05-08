@@ -29,7 +29,7 @@ resource "aws_lb_target_group" "fargate_service_tg" {
   port        = 80
   protocol    = "HTTP"
   target_type = "ip"
-  vpc_id      = var.vpc_id
+  vpc_id      = data.aws_vpc.default.id
 
   health_check {
     path    = "/hitide/api/session/user"

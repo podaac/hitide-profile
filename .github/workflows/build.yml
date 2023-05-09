@@ -96,6 +96,7 @@ jobs:
             echo "THE_VERSION=${THE_VERSION//-*}" >> $GITHUB_ENV
             npm --no-git-tag-version version ${env.THE_VERSION}
 
+
       - name: Run Snyk as a blocking step
         uses: snyk/actions/node@master
         env:

@@ -10,6 +10,7 @@ async function subset(job, accessToken) {
         searchStartDate,
         searchEndDate,
         granuleIds = [],
+        granuleNames = [],
         variables,
         merge
     } = job.subjobs[0];
@@ -27,6 +28,9 @@ async function subset(job, accessToken) {
     url += `&subset=lat(${south}:${north})`;
     url += `&subset=lon(${west}:${east})`;
     //url += `&subset=time("${startDate}":"${endDate}")`;
+    granuleNames.forEach((granuleName) => {
+        url += `&granuleName=${granuleName}`;
+    });
     granuleIds.forEach((granuleId) => {
         url += `&granuleId=${granuleId}`;
     });

@@ -162,6 +162,19 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Deploy Env Override
+        if: |
+          github.event.head_commit.message == '/deploy sit' ||
+          github.event.head_commit.message == '/deploy uat' ||
+          github.event.head_commit.message == '/deploy ops'
+        run: |
+          message="${{ github.event.head_commit.message }}"
+          trimmed_message=${message:1}  # Remove leading slash
+          override_env=$(echo "$trimmed_message" | grep -oE '[^[:space:]]+$')
+          override_env_upper=$(echo "$trimmed_message" | awk '{print toupper($NF)}')
+          echo "THE_ENV=${override_env}" >> $GITHUB_ENV
+          echo "TARGET_ENV_UPPERCASE=${override_env_upper}" >> $GITHUB_ENV
+
       - name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@v4
@@ -207,19 +220,6 @@ jobs:
       - uses: hashicorp/setup-terraform@v2.0.3
         with:
           terraform_version: 1.0.3
-
-      - name: Deploy Env Override
-        if: |
-          github.event.head_commit.message == '/deploy sit' ||
-          github.event.head_commit.message == '/deploy uat' ||
-          github.event.head_commit.message == '/deploy ops'
-        run: |
-          message="${{ github.event.head_commit.message }}"
-          trimmed_message=${message:1}  # Remove leading slash
-          override_env=$(echo "$trimmed_message" | grep -oE '[^[:space:]]+$')
-          override_env_upper=$(echo "$trimmed_message" | awk '{print toupper($NF)}')
-          echo "THE_ENV=${override_env}" >> $GITHUB_ENV
-          echo "TARGET_ENV_UPPERCASE=${override_env_upper}" >> $GITHUB_ENV
 
       - name: Deploy Terraform
         if: |

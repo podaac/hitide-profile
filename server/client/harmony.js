@@ -28,6 +28,7 @@ async function subset(job, accessToken) {
     url += `&subset=lat(${south}:${north})`;
     url += `&subset=lon(${west}:${east})`;
     //url += `&subset=time("${startDate}":"${endDate}")`;
+    // add granule names
     granuleNames.forEach((granuleName) => {
         url += `&granuleName=${granuleName}`;
     });

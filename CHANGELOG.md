@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - Update github actions to have commit message trigger deploys
+- PODAAC-5326: Fixed 'Add matching granules to download' button.
 ### Changed
 ### Removed
 ### Fixed

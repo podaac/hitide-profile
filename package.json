@@ -1,7 +1,7 @@
 {
   "name": "@gov.nasa.jpl.podaac/hitide-profile",
   "service_name": "hitide-profile",
-  "version": "4.9.8-0",
+  "version": "4.9.8-rc.1",
   "description": "",
   "main": "index.js",
   "scripts": {

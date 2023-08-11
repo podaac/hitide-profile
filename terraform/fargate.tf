@@ -141,14 +141,6 @@ resource "aws_ecs_task_definition" "fargate_task" {
           value = "${var.earth_data_login_base_url}"
         },
         {
-          name  = "L2SS_SUBSET_SUBMIT_REQUEST_URI"
-          value = "${var.l2ss_base_url}/subset/submit"
-        },
-        {
-          name  = "L2SS_SUBSET_STATUS_REQUEST_URI"
-          value = "${var.l2ss_base_url}/subset/status"
-        },
-        {
           name  = "HARMONY_BASE_URL"
           value = "${var.harmony_base_url}"
         },

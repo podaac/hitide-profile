@@ -30,4 +30,3 @@ Subset-Job related endpoints:
 ## Connections to other systems
 * Earthdata Login system
 * MySQL/MariaDB database
-* PODAAC L2SS services

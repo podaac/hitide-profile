@@ -222,8 +222,6 @@ describe("extractConfig(...)", () => {
         EARTH_DATA_LOGIN_USER_INFO_URI: "edl-user-info",
         EARTH_DATA_LOGIN_CLIENT_ID: "edl-client-id",
         EARTH_DATA_LOGIN_PASSWORD: "edl-password",
-        L2SS_SUBSET_SUBMIT_REQUEST_URI: "l2ss-subset-url",
-        L2SS_SUBSET_STATUS_REQUEST_URI: "l2ss-status-url",
         LIST_OF_AUTHORIZED_CORS_REQUESTER_ORIGINS: ["origin1", "origin2"],
     };
 

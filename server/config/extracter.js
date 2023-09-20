@@ -29,9 +29,6 @@ function extractConfig(source) {
     copyString(config, source, "EARTH_DATA_LOGIN_CLIENT_ID");
     copyString(config, source, "EARTH_DATA_LOGIN_PASSWORD");
 
-    copyString(config, source, "L2SS_SUBSET_SUBMIT_REQUEST_URI");
-    copyString(config, source, "L2SS_SUBSET_STATUS_REQUEST_URI");
-
     copyString(config, source, "HARMONY_BASE_URL");
 
     copyList(config, source, "LIST_OF_AUTHORIZED_CORS_REQUESTER_ORIGINS");

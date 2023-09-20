@@ -43,7 +43,7 @@ an appropriate label:
     - Anything related to CI/CD or metadata
 - `enhancement`
     - Improvement of an existing feature
-- `new-feature`
+- `new-feature`git 
     - An entirely new feature
     
 Feature and enhancement requests should contain a detailed description 

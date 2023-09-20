@@ -33,12 +33,6 @@ module.exports = {
     EARTH_DATA_LOGIN_CLIENT_ID: "",
     EARTH_DATA_LOGIN_PASSWORD: "",
 
-    // The url for l2ss /subset/submit endpoint
-    L2SS_SUBSET_SUBMIT_REQUEST_URI:
-        "https://podaac-tools.jpl.nasa.gov/l2ss-services/l2ss/subset/submit",
-    L2SS_SUBSET_STATUS_REQUEST_URI:
-        "https://podaac-tools.jpl.nasa.gov/l2ss-services/l2ss/subset/status",
-
     HARMONY_BASE_URL: 'https://harmony.earthdata.nasa.gov',
 
     // The origin (protocol://host:port) for any apps that should be able to access this API by CORS

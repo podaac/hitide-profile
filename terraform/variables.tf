@@ -67,9 +67,6 @@ variable "load_balancer_sg_name" {
 variable "earth_data_login_base_url" {
   default = "https://urs.earthdata.nasa.gov"
 }
-variable "l2ss_base_url" {
-  default = "https://podaac-tools.jpl.nasa.gov/l2ss-services/l2ss"
-}
 
 variable "harmony_base_url" {
   default = "https://harmony.earthdata.nasa.gov"

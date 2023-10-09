@@ -11,6 +11,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 
+## [4.10.0]
+### Added
+### Changed
+### Removed
+- issue-24: Removed last references to on-prem l2ss and podaac-tools.
+### Fixed
+
 ## [4.9.8]
 ### Added
 - Update github actions to have commit message trigger deploys

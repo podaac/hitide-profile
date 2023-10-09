@@ -48,7 +48,7 @@ function generateCitation(job, subjobIndex) {
     let str = `PO.DAAC 2019. High-Level Tool for Interactive Data Extraction (HiTIDE V ${
         util.getHitideVersion().string
     }). `;
-    str += `PO.DAAC, Jet Propulsion Laboratory, Pasadena, California, USA. https://podaac-tools.jpl.nasa.gov/hitide. `;
+    str += `PO.DAAC, Jet Propulsion Laboratory, Pasadena, California, USA. https://hitide.podaac.earthdatacloud.nasa.gov/. `;
     str += `Accessed ${monthName} ${date}, ${year}. Subset obtained for ${datasetId} product `;
     str += `for region: ${westLon}, ${southLat}, ${eastLon}, ${northLat} time period: ${searchStartDate} to ${searchEndDate}.`;
 

@@ -1,5 +1,5 @@
+FROM node:21
 # FROM node:18.20.1
-FROM node:21.6
 LABEL org.opencontainers.image.source="https://github.com/podaac/hitide-profile"
 RUN npm install forever -g
 

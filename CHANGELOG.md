@@ -12,6 +12,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 
+## [4.10.1]
+### Added
+### Changed
+- Security update: Dockerfile updated node base image to v21.6
+### Removed
+### Fixed
+
 ## [4.10.0]
 ### Added
 ### Changed

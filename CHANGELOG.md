@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 ### Changed
+- feature-29: updated docker node version to 21.7 (the most current long term support version).
 ### Removed
 ### Fixed
 

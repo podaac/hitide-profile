@@ -47,6 +47,8 @@ router.all(/cmr/, async (req, res, next) => {
   if(req.body) cmrRequest.write(JSON.stringify(req.body));
 
   cmrRequest.on('response', (response) => {
+    console.log('cmr response')
+    console.log(response)
     res.status(response.statusCode);
     const returnHeaders = filterHeaders(response.headers, allowedHeadersFromCmr);
     res.set(returnHeaders);

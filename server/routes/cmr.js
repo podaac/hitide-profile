@@ -47,7 +47,6 @@ router.all(/cmr/, async (req, res, next) => {
   if(req.body) cmrRequest.write(JSON.stringify(req.body));
 
   cmrRequest.on('response', (response) => {
-    logger.debug(response);
     res.status(response.statusCode);
     const returnHeaders = filterHeaders(response.headers, allowedHeadersFromCmr);
     res.set(returnHeaders);
@@ -59,7 +58,9 @@ router.all(/cmr/, async (req, res, next) => {
   })
   cmrRequest.on("error", function (error) {
     console.log("got an error");
+    console.log(error)
     next(error);
+    logger.debug('ERROR HERE')
     logger.debug(error);
   });
   cmrRequest.end();

@@ -17,16 +17,25 @@ const middleware = (req, res, next) => {
     url: req.originalUrl
   });
   
-  
   res.on('finish', () => {
-    logger.info({
-      message:"Request Finish",
+    const logMessage = JSON.stringify({
+      message: "Request Finish",
       method: req.method,
       url: req.originalUrl,
-      status: res.statusCode, 
+      status: res.statusCode,
       processingTime: Date.now() - startTime
-    })
-  })
+    });
+    logger.info(logMessage);
+  });
+  // res.on('finish', () => {
+  //   logger.info({
+  //     message:"Request Finish",
+  //     method: req.method,
+  //     url: req.originalUrl,
+  //     status: res.statusCode, 
+  //     processingTime: Date.now() - startTime
+  //   })
+  // })
 
   next();
 }

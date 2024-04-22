@@ -60,6 +60,7 @@ router.all(/cmr/, async (req, res, next) => {
   cmrRequest.on("error", function (error) {
     console.log("got an error");
     next(error);
+    logger.debug(error);
   });
   cmrRequest.end();
 });

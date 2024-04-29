@@ -7,7 +7,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 ### Changed
-- feature-29: updated docker node version to 20.12.1 (the most current long term support version).
 ### Removed
 ### Fixed
 
@@ -15,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [4.10.1]
 ### Added
 ### Changed
-- Security update: Dockerfile updated node base image to v21.6
+- feature-29: updated docker node version to 20.12.1 (the most current long term support version).
 ### Removed
 ### Fixed
 

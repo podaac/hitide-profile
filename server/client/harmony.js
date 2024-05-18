@@ -42,6 +42,7 @@ async function subset(job, accessToken) {
     let response, text;
     try {
         response = await fetch(url, {
+            method: 'POST',
             headers: {
                 Authorization: `Bearer ${accessToken}`,
             },

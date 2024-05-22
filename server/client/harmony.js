@@ -29,10 +29,12 @@ async function subset(job, accessToken) {
     url += `&subset=lon(${west}:${east})`;
     //url += `&subset=time("${startDate}":"${endDate}")`;
     // add granule names
+    const formData = new FormData();
     granuleNames.forEach((granuleName) => {
         url += `&granuleName=${granuleName}`;
     });
     granuleIds.forEach((granuleId) => {
+        formData.append("granuleId", granuleId);
         url += `&granuleId=${granuleId}`;
     });
     if(merge) url += `&concatenate=true`;
@@ -46,6 +48,7 @@ async function subset(job, accessToken) {
             headers: {
                 Authorization: `Bearer ${accessToken}`,
             },
+            body: formData
         });
         text = await response.text();
     } catch (error) {

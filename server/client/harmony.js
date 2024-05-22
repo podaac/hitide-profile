@@ -30,12 +30,12 @@ async function subset(job, accessToken) {
     //url += `&subset=time("${startDate}":"${endDate}")`;
     // add granule names
     const formData = new FormData();
-    granuleNames.forEach((granuleName) => {
-        url += `&granuleName=${granuleName}`;
-    });
+    // granuleNames.forEach((granuleName) => {
+    //     url += `&granuleName=${granuleName}`;
+    // });
     granuleIds.forEach((granuleId) => {
         formData.append("granuleId", granuleId);
-        url += `&granuleId=${granuleId}`;
+        // url += `&granuleId=${granuleId}`;
     });
     if(merge) url += `&concatenate=true`;
 

@@ -7,16 +7,11 @@ async function subset(job, accessToken) {
     const {
         datasetId,
         bbox,
-        searchStartDate,
-        searchEndDate,
         granuleIds = [],
-        granuleNames = [],
         variables,
         merge
     } = job.subjobs[0];
     const [west, south, east, north] = bbox.split(",");
-    //const startDate = startOfDay(searchStartDate);
-    //const endDate = endOfDay(searchEndDate);
 
     let variablesString = variables || "all";
     if (Array.isArray(variables)) variablesString = variables.join(",");
@@ -27,15 +22,12 @@ async function subset(job, accessToken) {
     url += `&skipPreview=true`;
     url += `&subset=lat(${south}:${north})`;
     url += `&subset=lon(${west}:${east})`;
-    //url += `&subset=time("${startDate}":"${endDate}")`;
+
     // add granule names
     const formData = new FormData();
-    // granuleNames.forEach((granuleName) => {
-    //     url += `&granuleName=${granuleName}`;
-    // });
+
     granuleIds.forEach((granuleId) => {
         formData.append("granuleId", granuleId);
-        // url += `&granuleId=${granuleId}`;
     });
     if(merge) url += `&concatenate=true`;
 

@@ -24,11 +24,13 @@ async function subset(job, accessToken) {
     url += `&subset=lat(${south}:${north})`;
     url += `&subset=lon(${west}:${east})`;
 
+    logger.debug({message: 'harmony subset request url', url});
+
     // add granule names
     // const formData = new FormData();
 
     const formData = new URLSearchParams();
-    
+
     granuleIds.forEach((granuleId) => {
         // formData.append("granuleId", granuleId);
         formData.append('granuleId', granuleId);

@@ -1,5 +1,6 @@
 const fetch = require("node-fetch");
 const config = require("../config/config-loader");
+const { logger } = require('../util/logger');
 
 const baseUrl = config.HARMONY_BASE_URL;
 
@@ -42,6 +43,18 @@ async function subset(job, accessToken) {
             },
             body: formData
         });
+        // log harmony request
+        const message = {
+            message: "harmony subset request url",
+            url,
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+            body: formData
+          };
+        logger.debug(message);
+        
         text = await response.text();
     } catch (error) {
         throw new Error("Harmony.subset() - Error fetching -> " + error.message);

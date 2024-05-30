@@ -25,10 +25,13 @@ async function subset(job, accessToken) {
     url += `&subset=lon(${west}:${east})`;
 
     // add granule names
-    const formData = new FormData();
+    // const formData = new FormData();
 
+    const formData = new URLSearchParams();
+    
     granuleIds.forEach((granuleId) => {
-        formData.append("granuleId", granuleId);
+        // formData.append("granuleId", granuleId);
+        formData.append('granuleId', granuleId);
     });
     if(merge) url += `&concatenate=true`;
 
@@ -54,7 +57,7 @@ async function subset(job, accessToken) {
             body: formData
           };
         logger.debug(message);
-        
+
         text = await response.text();
     } catch (error) {
         throw new Error("Harmony.subset() - Error fetching -> " + error.message);

@@ -1,6 +1,6 @@
 const fetch = require("node-fetch");
 const config = require("../config/config-loader");
-const { logger } = require('../util/logger');
+var FormData = require('form-data');
 
 const baseUrl = config.HARMONY_BASE_URL;
 
@@ -10,7 +10,7 @@ async function subset(job, accessToken) {
         bbox,
         granuleIds = [],
         variables,
-        merge
+        merge,
     } = job.subjobs[0];
     const [west, south, east, north] = bbox.split(",");
 
@@ -24,20 +24,13 @@ async function subset(job, accessToken) {
     url += `&subset=lat(${south}:${north})`;
     url += `&subset=lon(${west}:${east})`;
 
-    logger.debug({message: 'harmony subset request url', url});
-
     // add granule names
-    // const formData = new FormData();
-
-    const formData = new URLSearchParams();
+    const formData = new FormData();
 
     granuleIds.forEach((granuleId) => {
-        // formData.append("granuleId", granuleId);
         formData.append('granuleId', granuleId);
     });
     if(merge) url += `&concatenate=true`;
-
-    console.log('harmony subset request: ', url);
 
     let response, text;
     try {
@@ -48,18 +41,6 @@ async function subset(job, accessToken) {
             },
             body: formData
         });
-        // log harmony request
-        const message = {
-            message: "harmony subset request url",
-            url,
-            method: 'POST',
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-            },
-            body: formData
-          };
-        logger.debug(message);
-
         text = await response.text();
     } catch (error) {
         throw new Error("Harmony.subset() - Error fetching -> " + error.message);

@@ -21,6 +21,8 @@
     "express": "^4.16.4",
     "express-mysql-session": "^2.1.7",
     "express-session": "^1.15.6",
+    "forever": "^4.0.3",
+    "form-data": "^4.0.0",
     "helmet": "^4.6.0",
     "jsonwebtoken": "^9.0.0",
     "moment": "^2.29.2",

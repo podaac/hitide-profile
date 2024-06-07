@@ -1,5 +1,6 @@
 const fetch = require("node-fetch");
 const config = require("../config/config-loader");
+var FormData = require('form-data');
 
 const baseUrl = config.HARMONY_BASE_URL;
 
@@ -7,16 +8,11 @@ async function subset(job, accessToken) {
     const {
         datasetId,
         bbox,
-        searchStartDate,
-        searchEndDate,
         granuleIds = [],
-        granuleNames = [],
         variables,
-        merge
+        merge,
     } = job.subjobs[0];
     const [west, south, east, north] = bbox.split(",");
-    //const startDate = startOfDay(searchStartDate);
-    //const endDate = endOfDay(searchEndDate);
 
     let variablesString = variables || "all";
     if (Array.isArray(variables)) variablesString = variables.join(",");
@@ -27,24 +23,23 @@ async function subset(job, accessToken) {
     url += `&skipPreview=true`;
     url += `&subset=lat(${south}:${north})`;
     url += `&subset=lon(${west}:${east})`;
-    //url += `&subset=time("${startDate}":"${endDate}")`;
+
     // add granule names
-    granuleNames.forEach((granuleName) => {
-        url += `&granuleName=${granuleName}`;
-    });
+    const formData = new FormData();
+
     granuleIds.forEach((granuleId) => {
-        url += `&granuleId=${granuleId}`;
+        formData.append('granuleId', granuleId);
     });
     if(merge) url += `&concatenate=true`;
-
-    console.log('harmony subset request: ', url);
 
     let response, text;
     try {
         response = await fetch(url, {
+            method: 'POST',
             headers: {
                 Authorization: `Bearer ${accessToken}`,
             },
+            body: formData
         });
         text = await response.text();
     } catch (error) {

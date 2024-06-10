@@ -9,6 +9,7 @@ async function subset(job, accessToken) {
         datasetId,
         bbox,
         granuleIds = [],
+        granuleNames = [],
         variables,
         merge,
     } = job.subjobs[0];
@@ -26,10 +27,16 @@ async function subset(job, accessToken) {
 
     // add granule names
     const formData = new FormData();
+    if(granuleIds.length > 0) {
+        granuleIds.forEach((granuleId) => {
+            formData.append('granuleId', granuleId);
+        });
+    } else if (granuleNames.length > 0) {
+        granuleNames.forEach((granuleName) => {
+            formData.append('granuleName', granuleName);
+        });
+    }
 
-    granuleIds.forEach((granuleId) => {
-        formData.append('granuleId', granuleId);
-    });
     if(merge) url += `&concatenate=true`;
 
     let response, text;

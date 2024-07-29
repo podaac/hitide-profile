@@ -45,6 +45,7 @@ async function subset(job, accessToken) {
             method: 'POST',
             headers: {
                 Authorization: `Bearer ${accessToken}`,
+                ContentType: 'multipart/form-data',
             },
             body: formData
         });

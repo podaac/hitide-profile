@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - issue-58: Changed harmony submit call from GET to POST.
 ### Removed
 ### Fixed
+- issue-72: Fixed multipart form data for harmony submit.
 
 
 ## [4.10.0]

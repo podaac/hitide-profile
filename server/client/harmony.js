@@ -24,7 +24,7 @@ async function subset(job, accessToken) {
     url += `&subset=lat(${south}:${north})`;
     url += `&subset=lon(${west}:${east})`;
 
-    // add granule names
+    // add granule names to form data
     const formData = new FormData();
 
     granuleIds.forEach((granuleId) => {

@@ -27,9 +27,8 @@ async function subset(job, accessToken) {
     // add granule names to form data
     const formData = new FormData();
 
-    granuleIds.forEach((granuleId) => {
-        formData.append('granuleId', granuleId);
-    });
+    const granuleIdsString = granuleIds.join(',');
+    formData.append('granuleId', granuleIdsString);
     if(merge) url += `&concatenate=true`;
 
     let response, text;

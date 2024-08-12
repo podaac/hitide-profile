@@ -25,18 +25,12 @@ async function subset(job, accessToken) {
     url += `&subset=lat(${south}:${north})`;
     url += `&subset=lon(${west}:${east})`;
 
-    // add granule names
+    // add granule names to form data
     const formData = new FormData();
-    if(granuleIds.length > 0) {
-        granuleIds.forEach((granuleId) => {
-            formData.append('granuleId', granuleId);
-        });
-    } else if (granuleNames.length > 0) {
-        granuleNames.forEach((granuleName) => {
-            formData.append('granuleName', granuleName);
-        });
-    }
 
+    const granuleIdsString = granuleIds.join(',');
+    formData.append('granuleId', granuleIdsString);
+    
     if(merge) url += `&concatenate=true`;
 
     let response, text;

@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Removed
 ### Fixed
+- issue-72: Fixed multipart form data for harmony submit.
 - issue-45: Fixed history not showing up.
 
 

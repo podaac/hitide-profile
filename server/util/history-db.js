@@ -91,7 +91,15 @@ function convertDbJobToJsJob(dbJob) {
         }
 
         if(jsonProperties[jsKey]) {
-            value = JSON.parse(value);
+            // if string is not valid json, convert it to valid json.
+            try {
+                value = JSON.parse(value);
+            } catch(error) {
+                if(dbKey === 'download_urls') {
+                    value = ['https://harmony.earthdata.nasa.gov/jobs/' + dbJob['token']]
+                }
+            }
+            
         }
 
         jsJob[jsKey] = value;

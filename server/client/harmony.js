@@ -9,6 +9,7 @@ async function subset(job, accessToken) {
         datasetId,
         bbox,
         granuleIds = [],
+        granuleNames = [],
         variables,
         merge,
     } = job.subjobs[0];
@@ -29,6 +30,7 @@ async function subset(job, accessToken) {
 
     const granuleIdsString = granuleIds.join(',');
     formData.append('granuleId', granuleIdsString);
+    
     if(merge) url += `&concatenate=true`;
 
     let response, text;

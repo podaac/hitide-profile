@@ -24,12 +24,12 @@ async function subset(job, accessToken) {
     url += `&subset=lat(${south}:${north})`;
     url += `&subset=lon(${west}:${east})`;
 
-    // add granule names
+    // add granule names to form data
     const formData = new FormData();
 
-    granuleIds.forEach((granuleId) => {
-        formData.append('granuleId', granuleId);
-    });
+    const granuleIdsString = granuleIds.join(',');
+    formData.append('granuleId', granuleIdsString);
+    
     if(merge) url += `&concatenate=true`;
 
     let response, text;

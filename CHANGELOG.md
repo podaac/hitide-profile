@@ -10,7 +10,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - issue-58: Changed harmony submit call from GET to POST.
 ### Removed
 ### Fixed
+- issue-72: Fixed multipart form data for harmony submit.
+- issue-45: Fixed history not showing up.
 
+
+## [4.10.1]
+### Added
+### Changed
+- issue-58: Changed harmony submit call from GET to POST.
+- feature-29: updated docker node version to 20.12.1 (the most current long term support version).
+### Removed
+### Fixed
 
 ## [4.10.0]
 ### Added
@@ -21,7 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [4.9.8]
 ### Added
-- Update github actions to have commit message trigger deploys
+- Update github actions to have commit message trigger deploys.
 - PODAAC-5326: Fixed 'Add matching granules to download' button.
 ### Changed
 ### Removed

@@ -137,3 +137,9 @@ SHOW TABLES;
 ```
 
 You should see the tables created by the setup script.
+
+### Note:
+In HiTIDE UI code in the **hitideConfig.js** file, make sure you set the **hitideProfileOrigin** variable to where your local hitide-profile instance is running so the frontend knows where to find hitide-profile. For example:
+```
+var hitideProfileOrigin = "http://localhost:8080/hitide/api";
+```

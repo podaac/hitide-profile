@@ -51,7 +51,7 @@ resource "aws_db_instance" "database" {
   storage_type           = "gp2"
   engine                 = "mysql"
   engine_version         = "5.7"
-  instance_class         = "db.t2.small"
+  instance_class         = "db.t3.micro"
   name                   = "hitideprofiledb"
   username               = "hitideprofileadmin"
   password               = random_password.db_admin_pass.result

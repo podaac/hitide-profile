@@ -1,10 +1,13 @@
 // const logger = console;
 const {createLogger, format, transports } = require('winston');
-const {combine, timestamp, label, prettyPrint} = format;
+const {combine, timestamp} = format;
 
 const logger = createLogger({
   level: 'debug',
-  format: prettyPrint(),
+  format: combine(
+    timestamp(),
+    format.json() // Single-line JSON logs for CloudWatch readability
+  ),
   transports: [new transports.Console()]
 });
 
@@ -16,17 +19,16 @@ const middleware = (req, res, next) => {
     method: req.method,
     url: req.originalUrl
   });
-  
-  
+
   res.on('finish', () => {
     logger.info({
-      message:"Request Finish",
+      message: "Request Finish",
       method: req.method,
       url: req.originalUrl,
-      status: res.statusCode, 
+      status: res.statusCode,
       processingTime: Date.now() - startTime
-    })
-  })
+    });
+  });
 
   next();
 }

@@ -233,8 +233,8 @@ jobs:
           AWS_DEFAULT_REGION:      us-west-2
 
           TF_VAR_hitide_profile_docker_image: "ghcr.io/podaac/hitide-profile:${{ env.DOCKER_METADATA_OUTPUT_VERSION }}"
-          TF_VAR_EARTH_DATA_LOGIN_CLIENT_ID: ${{ secrets[format('EARTH_DATA_LOGIN_CLIENT_ID_{0}', env.TARGET_ENV_UPPERCASE)] }}
-          TF_VAR_EARTH_DATA_LOGIN_PASSWORD: ${{ secrets[format('EARTH_DATA_LOGIN_PASSWORD_{0}', env.TARGET_ENV_UPPERCASE)] }}
+          TF_VAR_EARTH_DATA_LOGIN_CLIENT_ID: ${{ secrets[format('EARTH_DATA_LOGIN_CLIENT_ID_{0}_APP', env.TARGET_ENV_UPPERCASE)] }}
+          TF_VAR_EARTH_DATA_LOGIN_PASSWORD: ${{ secrets[format('EARTH_DATA_LOGIN_PASSWORD_{0}_APP', env.TARGET_ENV_UPPERCASE)] }}
 
         run: |
           source bin/config.sh ${{ env.THE_ENV }}

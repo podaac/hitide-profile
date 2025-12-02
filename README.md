@@ -38,7 +38,7 @@ Subset-Job related endpoints:
 
 #### Step 1: Pull the MySQL Docker Image
 
-Make sure you have Docker installed on your system. Then, pull the MySQL version 5 Docker image:
+Make sure you have Docker installed on your system. Then, pull the MySQL version 8 Docker image:
 
 ```bash
 docker pull --platform linux/x86_64 mysql

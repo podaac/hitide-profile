@@ -42,7 +42,7 @@ Make sure you have Docker installed on your system. Then, pull the MySQL version
 
 ```bash
 docker pull --platform linux/x86_64 mysql
-docker pull mysql:5
+docker pull mysql:8
 ```
 
 #### Step 2: Run the MySQL Docker Container
@@ -50,7 +50,7 @@ docker pull mysql:5
 Run a MySQL container with the desired configuration:
 
 ```bash
-docker run --name hitide-mysql --platform linux/amd64 -e MYSQL_ROOT_PASSWORD=my-secret-pw -d -p 3306:3306 mysql:5 
+docker run --name hitide-mysql --platform linux/amd64 -e MYSQL_ROOT_PASSWORD=my-secret-pw -d -p 3306:3306 mysql:8 
 ```
 
 You can customize:

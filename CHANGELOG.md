@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 ### Changed
 - Update mysql library to mysql2 3.6.0
+- Updated mysql db version to 8
 ### Removed
 ### Fixed
 - issue-72: Fixed multipart form data for harmony submit.

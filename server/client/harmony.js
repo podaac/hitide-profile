@@ -9,7 +9,6 @@ async function subset(job, accessToken) {
         datasetId,
         bbox,
         granuleIds = [],
-        granuleNames = [],
         variables,
         merge,
     } = job.subjobs[0];

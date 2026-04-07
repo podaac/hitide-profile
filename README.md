@@ -2,7 +2,16 @@
 
 ## ⚠️ This Project Has Been Retired
 
-This repository is no longer actively maintained and has been officially shut down. No further updates, bug fixes, or support will be provided. The code is preserved here for historical reference only.
+The PO.DAAC High-level Tool for Interactive Data Extraction (HiTIDE) has been officially retired and is no longer maintained or supported.
+
+### ➡️ Use Earthdata Search Instead
+
+We encourage you to use **[Earthdata Search – HiTIDE Portal](https://search.earthdata.nasa.gov/search?portal=hitide)** as the recommended alternative. This link is configured to display only the HiTIDE collections, providing a familiar experience.
+
+Please update any saved bookmarks to:
+`https://search.earthdata.nasa.gov/search?portal=hitide`
+
+If you have questions or need help getting started, visit the **[PO.DAAC Forum](https://forum.earthdata.nasa.gov/viewtopic.php?t=7440)**.
 
 ## Purpose
 HiTIDE-profile is a server-side service created to provide [HiTIDE-ui](https://podaac-git.jpl.nasa.gov:8443/HiTIDE-UI-Components/hitide-ui) the following capabilities:

@@ -1,5 +1,9 @@
 # HiTIDE - Profile
 
+## ⚠️ This Project Has Been Retired
+
+This repository is no longer actively maintained and has been officially shut down. No further updates, bug fixes, or support will be provided. The code is preserved here for historical reference only.
+
 ## Purpose
 HiTIDE-profile is a server-side service created to provide [HiTIDE-ui](https://podaac-git.jpl.nasa.gov:8443/HiTIDE-UI-Components/hitide-ui) the following capabilities:
 * Logging in and out using ESDIS Earthdata Login system
